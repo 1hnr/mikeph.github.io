@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,12 +9,8 @@
 <style>
   body {
     display: none;
-  }
-</style>
-</head>
-<body>
-<script>
-document.addEventListener('contextmenu', (e) => e.preventDefault());
+  };
+  document.addEventListener('contextmenu', (e) => e.preventDefault());
 function ctrlShiftKey(e, keyCode) {
     return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
     }
@@ -29,9 +24,6 @@ document.onkeydown = (e) => {
         )
         return false;
 };
-</script>
-</body>
-</html>
 document.onkeydown = function(e) {
     if(e.keyCode == 123) {
      return false;
@@ -49,7 +41,11 @@ document.onkeydown = function(e) {
     if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)){
      return false;
     }      
- }
+ };
+</style>
+</head>
+<body>
+<script>
 
 #EXTM3U billed-msg="WELLCOME TO HONOR TV - ENJOY WATCHING "
 
