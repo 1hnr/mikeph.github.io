@@ -1,0 +1,36 @@
+Open cPanel
+Click On File Manager
+Click On Settings ( Top Right Corner )
+Check On Show Hidden Files (dotfiles) And Save It
+Reload File Manager
+
+Step 1.) 
+-------------------------------------------------------------
+
+Create .htaccess File
+Now Open It By edit Option
+And Paste The Code Of code.txt
+Done
+
+-------------------------------------------------------------
+
+Step 2.)
+
+Now Create hider.php file
+Now Open It By edit Option
+And Paste The Code of hider.txt
+Now Select Your Any PHP File
+And After 
+<?php
+add
+include'./hider.php';
+
+For HTML File Select HTML File Click On rename
+Now rename Your File extension To .php
+And Follow Above Step
+Done.
+
+-------------------------------------------------------------
+
+
+Enjoy............................
