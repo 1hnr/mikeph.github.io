@@ -9,7 +9,7 @@
 <style>
   body {
     display: none;
-  };
+  }
   document.addEventListener('contextmenu', (e) => e.preventDefault());
 function ctrlShiftKey(e, keyCode) {
     return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
@@ -23,7 +23,7 @@ document.onkeydown = (e) => {
         (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0))
         )
         return false;
-};
+    }
 document.onkeydown = function(e) {
     if(e.keyCode == 123) {
      return false;
@@ -41,7 +41,7 @@ document.onkeydown = function(e) {
     if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)){
      return false;
     }      
- };
+}
 </style>
 </head>
 <body>
