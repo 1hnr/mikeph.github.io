@@ -719,12 +719,28 @@ name: 'ALLTV 2',
         manifestUri: 'https://jungotvstream.chanall.tv/jungotv/hallypop/stream.m3u8',
         category: "Local"
       },
+{
+        name: 'PILIPINAS LIVE 1',
+        logo: 'https://pilipinaslive.com/assets/images/logo/pilipinaslive-logo-wbg.png',
+        type: 'mpegdash',
+        manifestUri: 'https://qp-pldt-live-grp-08-prod.akamaized.net/out/u/pl_sdi1.mpd',
+        clearKey: { 'a913faeecaac4813a55240bea0c68858': '05b7d7eaba8d6410dbe234336d9b235a' },
+        category: "PILIPINAS LIVE"
+	      },
+{
+        name: 'PILIPINAS LIVE 2',
+        logo: 'https://pilipinaslive.com/assets/images/logo/pilipinaslive-logo-wbg.png',
+        type: 'mpegdash',
+        manifestUri: 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/pl_sdi2.mpd',
+        clearKey: { '2f3056cac18d4e31a59de39767042b03': '83728946b898141ae411572f9f5fce0d' },
+        category: "PILIPINAS LIVE"
+      },
 
     
     ];
 
     const categories = [
-      "Local", "Sports", "News", "Movies", "Kids", "Educational and Documentary", "Lifestyle"
+      "Local", "Sports", "News", "Movies", "Kids", "Educational and Documentary", "Lifestyle","PILIPINAS LIVE"
     ];
 
     let player;
