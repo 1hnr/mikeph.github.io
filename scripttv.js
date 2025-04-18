@@ -683,34 +683,6 @@ name: 'COLORS TV',
         type: 'hls',
 		logo: 'https://i.imgur.com/C7a9W27.png',
 	        category: "Local"
-         },	 
-         {
-name: 'GMA',
-        manifestUri: 'https://gma.fflame143.workers.dev/master.m3u8',
-        type: 'hls',
-		logo: 'https://i.imgur.com/yh8g68M.png',
-	    category: "Local"
-         },	 
-         {
-name: 'GTV',
-        manifestUri: 'https://gtv.fflame143.workers.dev/master.m3u8',
-        type: 'hls',
-		logo: 'https://i.imgur.com/PsyP7Ga.jpeg',
-		 category: "Local"
-         },	 
-         {
-name: 'NET 25',
-        manifestUri: 'https://net25.fflame143.workers.dev/master.m3u8',
-        type: 'hls',
-		logo: 'https://i.imgur.com/2pRBUrH.png',
-		category: "Local"
-         },	 
-         {
-name: 'ALLTV 2',
-        manifestUri: 'https://alltv.fflame143.workers.dev/master.m3u8',
-        type: 'hls',
-		logo: 'https://i.imgur.com/YRA5Vz4.jpeg',
-		category: "Local"
 	      },
   {
         name: 'HallyPop',
