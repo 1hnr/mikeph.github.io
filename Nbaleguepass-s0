@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+<title>NBA LEAGUE PASS</title>
+<script disable-devtool-auto src='disable-devtool@latest">https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+<style>
+  body {
+    display: none;
+  }
+  document.addEventListener('contextmenu', (e) => e.preventDefault());
+function ctrlShiftKey(e, keyCode) {
+    return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
+    }
+document.onkeydown = (e) => {
+    if (
+        e.keyCode === 123 ||
+        ctrlShiftKey(e, 'I') ||
+        ctrlShiftKey(e, 'J') ||
+        ctrlShiftKey(e, 'C') ||
+        (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0))
+        )
+        return false;
+    }
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) {
+     return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)){
+     return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)){
+     return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){
+     return false;
+    }
+
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)){
+     return false;
+    }      
+}
+</style>
+</head>
+<body>
+<script>
+
+#EXTM3U billed-msg="WELLCOME TO NBA LEAGUE PASS- ENJOY WATCHING "
+
+
+
+
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVSs0eJBmqL7COLcRsOu1wnZhrHggVrR5Qn2Yq8ZRqkj7rCm0LiFQQ-TIO&s=10" group-title="🏀 NBA LEAGUE PASS S0",Boston Celtics vs Orlanda Magic  7:00am
+#EXTVLCOPT:http-origin=https://nbawebcast.app/
+#EXTVLCOPT:http-referrer=https://nbawebcast.app//
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+https://live.webcastserver.online/hdstream/embed/138.m3u8
+
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVSs0eJBmqL7COLcRsOu1wnZhrHggVrR5Qn2Yq8ZRqkj7rCm0LiFQQ-TIO&s=10" group-title="🏀 NBA LEAGUE PASS S0", Cleveland Cavaliers vs Miami Heat 7:30am
+#EXTVLCOPT:http-origin=https://nbawebcast.app/
+#EXTVLCOPT:http-referrer=https://nbawebcast.app//
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+https://live.webcastserver.online/hdstream/embed/167.m3u8
+
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVSs0eJBmqL7COLcRsOu1wnZhrHggVrR5Qn2Yq8ZRqkj7rCm0LiFQQ-TIO&s=10" group-title="🏀 NBA LEAGUE PASS S0",Golden State Warriors vs Houston Rockets 9:30am
+#EXTVLCOPT:http-origin=https://nbawebcast.app/
+#EXTVLCOPT:http-referrer=https://nbawebcast.app//
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+https://live.webcastserver.online/hdstream/embed/160.m3u8
