@@ -715,7 +715,6 @@ name: 'COLORS TV',
       "Local", "Sports", "News", "Movies", "Kids", "Educational and Documentary", "Lifestyle","PILIPINAS LIVE"
     ];
 
-<meta name="google-adsense-account" content="ca-pub-1451023777799984">
 
     let player;
 
