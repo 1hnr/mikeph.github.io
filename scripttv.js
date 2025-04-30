@@ -774,7 +774,7 @@ name: 'COLORS TV',
         youtubeEmbed.src = `${channel.embedUrl}&autoplay=1`;
       }
     }
-<meta name="google-adsense-account" content="ca-pub-1451023777799984">
+
 
     function stopCurrentStream() {
       const videoElement = document.getElementById("video");
