@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+<title>NBA LEAGUE PASS</title>
+<script disable-devtool-auto src='disable-devtool@latest">https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+<style>
+  body {
+    display: none;
+  }
+  document.addEventListener('contextmenu', (e) => e.preventDefault());
+function ctrlShiftKey(e, keyCode) {
+    return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
+    }
+document.onkeydown = (e) => {
+    if (
+        e.keyCode === 123 ||
+        ctrlShiftKey(e, 'I') ||
+        ctrlShiftKey(e, 'J') ||
+        ctrlShiftKey(e, 'C') ||
+        (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0))
+        )
+        return false;
+    }
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) {
+     return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)){
+     return false;
+    }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)){
+     return false;
+    }
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){
+     return false;
+    }
+
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)){
+     return false;
+    }      
+}
+</style>
+</head>
+<body>
+<script>
+
+#EXTM3U billed-msg="WELLCOME TO NBA LEAGUE PASS- ENJOY WATCHING "
+
+#EXTINF:-1 tvg-id="" tvg-name="" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzMLnQ1wzZf64E0Yuwkr7QWGMaVnjzmTn1BA&s" group-title="🏀 NBA LEAGUE PASS S0", NBA TV PHILIPPINES 
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
+#KODIPROP:inputstream.adaptive.license_key=c5e51f41ceac48709d0bdcd9c13a4d88:20b91609967e472c27040716ef6a8b9a
+https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/cgnl_nba.mpd
+
+
+
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/en/6/6e/NBA_League_Pass.png" group-title="🏀 NBA LEAGUE PASS S0", Milwaukee Bucks vs Indiana Pacers 6:00am
+#EXTVLCOPT:http-origin=https://googlapisapi.com
+#EXTVLCOPT:http-referrer=https://googlapisapi.com/new-stream-embed/33631?newa=111
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36
+http://xtream-ie.org:80/live/HONORTV/bshsrhthrh/5521?.mpd?token-745579298484938662905703877397479837774938748937839827738377374837373839489393773849392928763552652783939
+
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/en/6/6e/NBA_League_Pass.png" group-title="🏀 NBA LEAGUE PASS S0", Detroit Pistons vs New York Knicks 7:30am
+#EXTVLCOPT:http-origin=https://googlapisapi.com
+#EXTVLCOPT:http-referrer=https://googlapisapi.com/new-stream-embed/33633?newa=111
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36
+https://x3.xplorebrav.space/playlist/33633/load-playlist
+
+
+
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/en/6/6e/NBA_League_Pass.png" group-title="🏀 NBA LEAGUE PASS S0", Orlando Magic vs Boston Celtics 8:30am
+#EXTVLCOPT:http-origin=https://googlapisapi.com
+#EXTVLCOPT:http-referrer=https://googlapisapi.com/new-stream-embed/33632?newa=111
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36
+http://xtream-ie.org:80/live/HONORTV/bshsrhthrh/5523?.mpd?token-745579298484938662905703877397479837774938748937839827738377374837373839489393773849392928763552652783939
+
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/en/6/6e/NBA_League_Pass.png" group-title="🏀 NBA LEAGUE PASS S0", LA Clippers vs Denver Nuggets 10:00am
+#EXTVLCOPT:http-origin=https://googlapisapi.com
+#EXTVLCOPT:http-referrer=https://googlapisapi.com/new-stream-embed/33634?newa=111
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36
+http://xtream-ie.org:80/live/HONORTV/bshsrhthrh/5524?.mpd?token-745579298484938662905703877397479837774938748937839827738377374837373839489393773849392928763552652783939
+
+
+
+  
