@@ -791,4 +791,6 @@ name: 'COLORS TV',
     }
 
     document.addEventListener("DOMContentLoaded", initializeUI);
-  
+
+   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1451023777799984"
+     crossorigin="anonymous"></script>
