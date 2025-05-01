@@ -1,0 +1,42 @@
+
+<script>
+/* Redirect to an external (or internal) URL */
+window.location.href = 'https://www.youtube.com/@reialesa/videos';
+</script>
+
+
+<script>
+/* Redirect to an external (or internal) URL WITH a delay */
+setTimeout(function() {
+location.href = 'https://www.youtube.com/@reialesa/videos';
+},4000);
+</script>
+
+
+/* Redirect to any external (or internal) URL WITHOUT a delay - add this to your ''functions.php'' file under ''Appearance'' - ''Theme File Editor'' and replace the ''yourlink'' and 'yournewlink' with your own URLs */
+
+function reialesa_URL_redirect(){
+?>
+ <script>
+if (window.location == "https://yourlink.com/") {
+   window.location.href = 'https://yournewlink.com/'; 
+}
+ </script>
+<?php
+}
+add_action('wp_footer', 'reialesa_URL_redirect');
+
+
+/* Redirect to any external (or internal) URL WITH a delay - add this to your ''functions.php'' file under ''Appearance'' - ''Theme File Editor'' and replace the ''yourlink'' and 'yournewlink' with your own URLs */
+
+function reialesa_URL_redirect(){
+?>
+ <script>
+	 setTimeout(function () {
+if (window.location == "https://yourlink.com/") {
+   window.location.href = 'https://yournewlink.com/'; 
+}}, 4000);
+ </script>
+<?php
+}
+add_action('wp_footer', 'reialesa_URL_redirect');
