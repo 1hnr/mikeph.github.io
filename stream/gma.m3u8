@@ -1,4 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-STREAM-INF:BANDWIDTH=235178,RESOLUTION=320x180,CODECS="avc1.4D400D,mp4a.40.2"
-?token=1
+#EXT-X-STREAM-INF:
+https://honortv.netlify.app/stream/gma7.html
