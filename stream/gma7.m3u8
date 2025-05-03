@@ -1,6 +1,6 @@
 <script>
 /* Redirect to an external (or internal) URL */
-window.location.href = 'https://honortv.netlify.app/';
+window.location.href = 'https://honortv.netlify.app/stream/gma.m3u8';
 </script>
 
 
