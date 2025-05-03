@@ -14,6 +14,13 @@
         manifestUri: 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/cg_a2z.mpd',
         clearKey: { 'f703e4c8ec9041eeb5028ab4248fa094': 'c22f2162e176eee6273a5d0b68d19530' },
         category: "Local"
+    },	
+    {		
+        name: 'GMA',
+        type: 'youtube',
+        embedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCKL5hAuzgFQsyrsQKgU0Qng',
+		logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZnhcedgDXG_opZZuqtCRzieqg4DCyWGp8Ow&s',
+        category: "Local"	      
       },
       {
         name: 'GMA Pinoy TV',
