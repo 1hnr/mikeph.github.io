@@ -1,0 +1,6 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="SkySpMainEv.uk" group-title="SPORTS" tvg-logo="https://raw.githubusercontent.com/pigzillaaaaa/iptv-scraper/refs/heads/main/logos/sky-sports-main-event-uk.png",Sky Sports Main Event
+#EXTVLCOPT:http-referrer=https://newzar.xyz/
+#EXTVLCOPT:http-origin=https://newzar.xyz
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1
+https://azonew.newkso.ru/azo/eplayerskymain2/mono.m3u8
