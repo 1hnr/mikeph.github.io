@@ -1,12 +1,33 @@
+<script>
+/* Redirect to an external (or internal) URL */
+window.location.href = 'https://otieu.com/4/9334299';
+</script>
+
+
+<script>
+/* Redirect to an external (or internal) URL WITH a delay */
+setTimeout(function() {
+location.href = 'https://honortv.vercel.app/PlayFREE.html';
+},4000);
+</script>
+
+
 /* Redirect to any external (or internal) URL WITHOUT a delay - add this to your ''functions.php'' file under ''Appearance'' - ''Theme File Editor'' and replace the ''yourlink'' and 'yournewlink' with your own URLs */
 
 function reialesa_URL_redirect(){
 ?>
  <script>
-if (window.location == "https://otieu.com/4/9334299") {
-   window.location.href = 'https://honortv.vercel.app/'; 
+if (window.location == "https://yourlink.com/") {
+   window.location.href = 'https://yournewlink.com/'; 
 }
  </script>
 <?php
 }
 add_action('wp_footer', 'reialesa_URL_redirect');
+
+
+/* Redirect to any external (or internal) URL WITH a delay - add this to your ''functions.php'' file under ''Appearance'' - ''Theme File Editor'' and replace the ''yourlink'' and 'yournewlink' with your own URLs */
+
+function reialesa_URL_redirect(){
+?>
+ <script>
