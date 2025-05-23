@@ -6,7 +6,8 @@
   <div class="iframe">
    <iframe sandbox = "allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" width="1000" height="600" src="https://daddylive.sx/embed/stream-60.php" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
 </div>    
-window.onload = function(){
+  <style>
+    window.onload = function(){
     var button = document.getElementsByName("sandbox")[0]
     var iframe = document.getElementsByName("framez")[0]
     button.addEventListener('click',sndbx,false);
@@ -19,7 +20,9 @@ window.onload = function(){
     frames['framez'].location.href=nibba;
     iframe.sandbox = 'allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation';
     }
-} 
+}
+  </style>
+ 
   <!--HTML-->
 <button name="sandbox">SandBox</button>
 <iframe name="framez" id="framez" src="https://daddylive.sx/embed/stream-60.php" allowfullscreen="true"></iframe>
