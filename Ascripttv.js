@@ -787,7 +787,7 @@ name: 'COLORS TV',
     function stopCurrentStream() {
       const videoElement = document.getElementById("video");
       const youtubeElement = document.getElementById("youtube-video");
-      controls autoplay>
+      
       if (player) player.unload();
       videoElement.style.display = "none";
       youtubeElement.style.display = "none";
