@@ -756,7 +756,7 @@ name: 'COLORS TV',
           slider.appendChild(card);
         });
       });
-      controls autoplay>
+      
       loadStream(streams[0]); // Autoplay the first channel
     }
 
@@ -786,7 +786,7 @@ name: 'COLORS TV',
     function stopCurrentStream() {
       const videoElement = document.getElementById("video");
       const youtubeElement = document.getElementById("youtube-video");
-
+      controls autoplay
       if (player) player.unload();
       videoElement.style.display = "none";
       youtubeElement.style.display = "none";
