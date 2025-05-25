@@ -756,7 +756,7 @@ name: 'COLORS TV',
           slider.appendChild(card);
         });
       });
-
+      controls autoplay>
       loadStream(streams[0]); // Autoplay the first channel
     }
 
