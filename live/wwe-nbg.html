@@ -4,7 +4,7 @@
 <head>
   <h2>WWE NXT BATTLEGROUND</h2>
   <script>const MOBILE_UA = 'Mozilla/5.0 (iPhone;...'  // copy from your dev tools
-const YOUR_IFRAME_SRC_URL = 'https://example.com';
+const YOUR_IFRAME_SRC_URL = 'https://v3.thetvapp.to/hls/PPV01/tracks-v2a1/mono.m3u8?token=1hJGePp2Mp3n5UDk0yNhnw&expires=1748239956&user_id=Yk9DcHJYQ0ZOV1VyWHJ1UDl2WVFRV0VMTXpub244WVVpTnhSNVpWbQ==';
 
 const iframe = document.createElement('iframe');
 
@@ -17,7 +17,7 @@ xhr.onreadystatechange = () => {
   }
 };
 xhr.open("GET", YOUR_IFRAME_SRC_URL);
-xhr.setRequestHeader('Mozilla/5.0 (X11; Linux x86_64; rv:138.0) Gecko/20100101 Firefox/138.0', MOBILE_UA);  // succeeds in FF anyhow
+xhr.setRequestHeader('User-Agent', MOBILE_UA);  // succeeds in FF anyhow
 xhr.send();
   </script>
 
