@@ -1,8 +1,9 @@
-<?php 
-// PAGE SOURCE GUARD by Elijah Cuff.
-if (!hasParam('bounce'))
-{
-echo " 
+<?php
+ // use require for more security...
+include('lock.php'); 
+?>
+
+<HTML> 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -837,13 +838,6 @@ et=MTc4LjEyMS40LjY2
 
 
 
-";
-exit;
-}
-function hasParam($param)
-{
-    return isset($_POST[$param]);
-}
-?>
+
 
   
