@@ -1,3 +1,10 @@
+<?php
+ // use require for more security...
+include('lock.php'); 
+?>
+
+<HTML> 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -831,6 +838,13 @@ et=MTc4LjEyMS40LjY2
 
 
 
-
+";
+exit;
+}
+function hasParam($param)
+{
+    return isset($_POST[$param]);
+}
+?>
 
   
