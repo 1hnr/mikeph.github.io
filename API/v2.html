@@ -1,3 +1,24 @@
+<script>
+  function isAuthorizedBrowser() {
+    const userAgent = navigator.userAgent.toLowerCase();
+
+    // Allowed browsers (example: Chrome and Firefox)
+    const isChrome = userAgent.includes('chrome') && !userAgent.includes('edge') && !userAgent.includes('opr');
+    const isFirefox = userAgent.includes('firefox');
+
+    return isChrome || isFirefox;
+  }
+
+  if (!isAuthorizedBrowser()) {
+    // Option 1: Redirect to an error page
+    window.location.href = "/unauthorized-browser.html";
+
+    // Option 2: Or show an alert and block further action
+    // alert("Your browser is not supported. Please use Chrome or Firefox.");
+    // document.body.innerHTML = "";
+  }
+</script>
+
 #EXTM3U url-tvg="https://honortv-stream.netlify.app/cg1_epg.xml, https://honortv-stream.netlify.app/cg2_epg.xml.gz" billed-msg="WELLCOME TO HONOR TV - ENJOY WATCHING " 🤼 WRESTLING-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSSJKfUpG7UPTYrwo-zRnJ4ys1OEHiYVEMvA&usqp=CAU" 
 
 
