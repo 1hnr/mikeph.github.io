@@ -14,7 +14,8 @@ include('lock.php');
 <script disable-devtool-auto src='disable-devtool@latest">https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
 <script src="pro-tect.js"></script>
  <style>
-     
+  SetEnvIfNoCase User-Agent "site explore" bad_user
+Deny from env-bad_user   
 
   document.addEventListener('contextmenu', (e) => e.preventDefault());
 function ctrlShiftKey(e, keyCode) {
