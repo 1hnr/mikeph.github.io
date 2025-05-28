@@ -1,11 +1,4 @@
-<?php
-$user_agent = $_SERVER['HTTP_USER_AGENT'];
 
-if (strpos($user_agent, 'MSIE') !== false || strpos($user_agent, 'Trident') !== false) {
-    header('Location: /unsupported-browser.html');
-    exit;
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
