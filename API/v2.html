@@ -1,3 +1,11 @@
+<?php
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+if (strpos($user_agent, 'MSIE') !== false || strpos($user_agent, 'Trident') !== false) {
+    header('Location: /unsupported-browser.html');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,6 +33,13 @@
     // Option 2: Or show an alert and block further action
     // alert("Your browser is not supported. Please use Chrome or Firefox.");
     // document.body.innerHTML = "";
+  }
+
+  const ua = navigator.userAgent;
+
+  // Example: block old Safari or Internet Explorer
+  if (/MSIE|Trident|Safari\/[0-9]{1,2}\./.test(ua) && !/Chrome/.test(ua)) {
+    window.location.href = "/unsupported-browser.html";
   }
 </script>
  <style>
