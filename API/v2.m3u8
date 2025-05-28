@@ -1,8 +1,16 @@
+
 <script>
-<?php
- // use require for more security...
-include('lock.php'); 
-?></script>
+/* Redirect to an external (or internal) URL */
+window.location.href = 'https://honortv.netlify.app/';
+</script>
+
+
+<script>
+/* Redirect to an external (or internal) URL WITH a delay */
+setTimeout(function() {
+location.href = 'https://honortv.netlify.app/';
+},4000);
+</script>
 
 <!DOCTYPE html>
 <html lang="en">
