@@ -1,0 +1,49 @@
+addEventListener("fetch", event => {
+    event.respondWith(handleRequest(event.request));
+});
+
+async function handleRequest(request) {
+    const allowedAgents = ["OTT Navigator", "OTT Player", "OTT TV"];
+    const userAgent = request.headers.get("User-Agent") || "";
+
+    // Check if the User-Agent contains any of the allowed agents
+    const isAllowed = allowedAgents.some(agent => userAgent.includes(agent));
+
+    if (!isAllowed) {
+        return new Response("Access Denied: By Honor TV", {
+            status: 403,
+            headers: { "Content-Type": "text/plain" }
+        });
+    }
+
+    const streamURL = "http://mikepho.com/playlist.m3u"; // Replace with actual IPTV link
+
+    try {
+        const response = await fetch(streamURL, {
+            headers: {
+                "User-Agent": "Mozilla/5.0", // This UA is sent to the upstream IPTV server
+                "Cache-Control": "no-cache"
+            }
+        });
+
+        if (!response.ok) {
+            return new Response(`Error fetching stream: ${response.statusText}`, {
+                status: response.status,
+                headers: { "Content-Type": "text/plain" }
+            });
+        }
+
+        return new Response(response.body, {
+            status: 200,
+            headers: {
+                "Content-Type": "application/vnd.apple.mpegurl"
+            }
+        });
+
+    } catch (error) {
+        return new Response(`Internal Server Error: ${error.message}`, {
+            status: 500,
+            headers: { "Content-Type": "text/plain" }
+        });
+    }
+}
