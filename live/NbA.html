@@ -2,39 +2,92 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>M3U8 Player</title>
+  <title>NBA West Conf. Finals</title>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
-    .center {
+    body {
+      background-image: url('https://i.imgur.com/0uRLzUW.jpeg');
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
+    }
+    video {
       display: block;
-      margin: 0 auto;
+      margin: 20px auto;
+    }
+    h2 {
+      padding: 10px;
+    }
+    #demo {
+      background-color: green;
+      font-size: 20px;
+      padding: 10px;
     }
   </style>
 </head>
 <body>
 
-<video id="video" width="320" height="240" class="center" controls></video>
+  <h2 style="background-color:Red;">NBA West Conf. Finals (May 29, 2025)</h2>
+  <p id="demo"></p>
+  <h2 style="background-color:DodgerBlue;">NBA Game 5 - Minnesota Timberwolves vs Oklahoma City Thunder 8:30am</h2>
 
-<script>
-  const video = document.getElementById('video');
-  const videoSrc = "http://fl5.moveonjoy.com/NBA_1/tracks-v1a1/mono.ts.m3u8";
+  <!-- Video Player 1 -->
+  <video id="video1" width="320" height="240" controls referrerpolicy="origin">
+    Your browser does not support the video tag.
+  </video>
 
-  if (Hls.isSupported()) {
-    const hls = new Hls();
-    hls.loadSource(videoSrc);
-    hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, function () {
-      video.play();
-    });
-  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = videoSrc;
-    video.addEventListener('loadedmetadata', function () {
-      video.play();
-    });
-  } else {
-    alert('Your browser does not support HLS playback.');
-  }
-</script>
+  <h2 style="background-color:DodgerBlue;">SERVER 2</h2>
+
+  <!-- Video Player 2 -->
+  <video id="video2" width="320" height="240" controls referrerpolicy="origin">
+    Your browser does not support the video tag.
+  </video>
+
+  <script>
+    // Countdown Timer
+    var countDownDate = new Date("May 29, 2025 08:30:00").getTime();
+    var x = setInterval(function () {
+      var now = new Date().getTime();
+      var distance = countDownDate - now;
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      document.getElementById("demo").innerHTML =
+        days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+      if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("demo").innerHTML = "Start Live";
+      }
+    }, 1000);
+
+    // HLS Player for .m3u8
+    function setupHLS(videoId, streamUrl) {
+      const video = document.getElementById(videoId);
+      if (Hls.isSupported()) {
+        const hls = new Hls({
+          // Advanced: You could use a proxy here to add headers if needed
+        });
+        hls.loadSource(streamUrl);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+          video.play();
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = streamUrl;
+        video.addEventListener('loadedmetadata', function () {
+          video.play();
+        });
+      } else {
+        alert('Your browser does not support HLS playback.');
+      }
+    }
+
+    // Initialize both players
+    setupHLS("video1", "https://veetiz.com/playlist/stream_nba1.m3u8");
+    setupHLS("video2", "http://fl5.moveonjoy.com/NBA_1/tracks-v1a1/mono.ts.m3u8");
+  </script>
 
 </body>
 </html>
