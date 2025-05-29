@@ -1,53 +1,78 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>NBA Stream</title>
+  <meta charset="UTF-8">
+  <title>NBA Live Stream</title>
   <style>
     body {
       background-image: url('https://i.imgur.com/0uRLzUW.jpeg');
       text-align: center;
       font-family: Arial, sans-serif;
     }
+
+    p {
+      font-size: 20px;
+      margin-top: 0px;
+    }
+
+    h2 {
+      padding: 10px;
+    }
+
     video {
       width: 640px;
       height: 360px;
       margin: 20px auto;
-      display: block;
-    }
-    h2 {
-      background-color: DodgerBlue;
-      color: white;
-      padding: 10px;
     }
   </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    // Countdown timer
+    var countDownDate = new Date("May 29, 2025 8:30:00").getTime();
+    var x = setInterval(function() {
+      var now = new Date().getTime();
+      var distance = countDownDate - now;
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      document.getElementById("demo").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+      if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("demo").innerHTML = "Start Live";
+      }
+    }, 1000);
+
+    // HLS setup function
+    function setupHLSPlayer(videoId, sourceUrl) {
+      var video = document.getElementById(videoId);
+      if (Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource(sourceUrl);
+        hls.attachMedia(video);
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = sourceUrl;
+      }
+    }
+
+    window.onload = function() {
+      setupHLSPlayer('video1', 'https://veetiz.com/playlist/stream_nba1.m3u8');
+      setupHLSPlayer('video2', 'http://fl5.moveonjoy.com/NBA_2/tracks-v1a1/mono.ts.m3u8');
+    };
+  </script>
 </head>
+
 <body>
+  <h2 style="background-color:Red;">NBA West Conf. Finals (May 29, 2025)</h2>
+  <p style="background-color:Green;" id="demo"></p>
+  <h2 style="background-color:DodgerBlue;">NBA Game 5 - Minnesota Timberwolves vs Oklahoma City Thunder 8:30am</h2>
 
-<h2>NBA LIVE STREAM - Mozilla Compatible</h2>
+  <!-- Server 1 -->
+  <video id="video1" controls></video>
 
-<video id="video" controls autoplay></video>
-
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<script>
-  var video = document.getElementById('video');
-  var videoSrc = 'https://veetiz.com/playlist/stream_nba1.m3u8'; // Your M3U8 link
-
-  if (Hls.isSupported()) {
-    var hls = new Hls();
-    hls.loadSource(videoSrc);
-    hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, function () {
-      video.play();
-    });
-  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = videoSrc;
-    video.addEventListener('loadedmetadata', function () {
-      video.play();
-    });
-  } else {
-    alert('Your browser does not support M3U8 playback.');
-  }
-</script>
-
+  <!-- Server 2 -->
+  <h2 style="background-color:DodgerBlue;">SERVER 2</h2>
+  <video id="video2" controls></video>
 </body>
 </html>
