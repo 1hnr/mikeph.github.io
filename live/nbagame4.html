@@ -37,7 +37,7 @@ var x1 = setInterval(function() {
 }, 1000);
 
 // Countdown #2 - WWE
-var countDownDateConcert = new Date("May 31, 2025 8:00:00").getTime();
+var countDownDateConcert = new Date("June 1, 2025 8:00:00").getTime();
 
 var x2 = setInterval(function() {
   var now = new Date().getTime();
@@ -53,6 +53,26 @@ var x2 = setInterval(function() {
   if (distance < 0) {
     clearInterval(x2);
     document.getElementById("WWE").innerHTML = "WWE Started";
+  }
+}, 1000);
+
+   // Countdown #3 - UFC
+var countDownDateConcert = new Date("June 1, 2025 8:00:00").getTime();
+
+var x2 = setInterval(function() {
+  var now = new Date().getTime();
+  var distance = countDownDateConcert - now;
+
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  document.getElementById("WWE").innerHTML = "UFC Countdown: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+  if (distance < 0) {
+    clearInterval(x2);
+    document.getElementById("WWE").innerHTML = "UFC Started";
   }
 }, 1000);
 </script>
@@ -72,10 +92,24 @@ var x2 = setInterval(function() {
     <div>
   <div>
  <div>
-<h2 style="background-color:DodgerBlue;">WWE- Friday night</h2>
+<h2 style="background-color:DodgerBlue;">UFC Fight Night Main Card : Erin Blanchfield vs Maycee Barber</h2>
+    <p style="background-color:Green;" id="UFC"></p>
+   <video width="320" height="240" class=”center” controls unmuted>  
+  <source src="https://honortv-sports.hf.space/watch/aHR0cHM6Ly93aW5kbmV3Lm5ld2tzby5ydS93aW5kL3ByZW1pdW02OC9tb25vLm0zdTg=.m3u8" type="video/mp4">
+  <source src="movie.ogg" type="video/ogg">
+  Your browser does not support the video tag.
+</video>
+    <div>
+  <div>
+   <div>
+      <div>
+    <div>
+  <div>
+ <div>
+<h2 style="background-color:DodgerBlue;">WWE- Battleground Championship Wrestling</h2>
     <p style="background-color:Green;" id="WWE"></p>
    <video width="320" height="240" class=”center” controls unmuted>  
-  <source src="https://honortv-sports.hf.space/watch/aHR0cHM6Ly9uZnNuZXcubmV3a3NvLnJ1L25mcy9wcmVtaXVtMS9tb25vLm0zdTg=.m3u8" type="video/mp4">
+  <source src="https://honortv-sports.hf.space/watch/aHR0cHM6Ly9kZHk2bmV3Lm5ld2tzby5ydS9kZHk2L3ByZW1pdW0xNjcvbW9uby5tM3U4.m3u8" type="video/mp4">
   <source src="movie.ogg" type="video/ogg">
   Your browser does not support the video tag.
 </video>
