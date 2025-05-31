@@ -68,11 +68,11 @@ var x2 = setInterval(function() {
   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  document.getElementById("WWE").innerHTML = "UFC Countdown: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+  document.getElementById("UFC").innerHTML = "UFC Countdown: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
 
   if (distance < 0) {
     clearInterval(x2);
-    document.getElementById("WWE").innerHTML = "UFC Started";
+    document.getElementById("UFC").innerHTML = "UFC Started";
   }
 }, 1000);
 </script>
