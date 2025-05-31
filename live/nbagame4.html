@@ -14,42 +14,51 @@ body {
 }
    </style>
   
+
 <script>
-// Set the date we're counting down to
-var countDownDate = new Date("June 1, 2025 8:00:00").getTime();
+// Countdown #1 - NBA
+var countDownDateNBA = new Date("June 1, 2025 8:00:00").getTime();
 
-// Update the count down every 1 second
-var x = setInterval(function() {
-
-  // Get today's date and time
+var x1 = setInterval(function() {
   var now = new Date().getTime();
+  var distance = countDownDateNBA - now;
 
-  // Find the distance between now and the count down date
-  var distance = countDownDate - now;
-
-  // Time calculations for days, hours, minutes and seconds
   var days = Math.floor(distance / (1000 * 60 * 60 * 24));
   var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  // Display the result in the element with id="demo"
-  document.getElementById("nba").innerHTML = days + "d " + hours + "h "
-  + minutes + "m " + seconds + "s ";
-   document.getElementById("wwe").innerHTML = days + "d " + hours + "h "
-  + minutes + "m " + seconds + "s ";
+  document.getElementById("NBA").innerHTML = "NBA Countdown: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
 
-  // If the count down is finished, write some text
   if (distance < 0) {
-    clearInterval(x);
-    document.getElementById("nba").innerHTML = "Start Live";
-    document.getElementById("wwe").innerHTML = "Start Live";
+    clearInterval(x1);
+    document.getElementById("NBA").innerHTML = "NBA Started";
+  }
+}, 1000);
+
+// Countdown #2 - Concert
+var countDownDateConcert = new Date("July 1, 2025 12:00:00").getTime();
+
+var x2 = setInterval(function() {
+  var now = new Date().getTime();
+  var distance = countDownDateConcert - now;
+
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  document.getElementById("WWE").innerHTML = "WWE Countdown: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+  if (distance < 0) {
+    clearInterval(x2);
+    document.getElementById("WWE").innerHTML = "WWE Started";
   }
 }, 1000);
 </script>
  <h2 style="background-color:Red;">NBA West Conf. Finals (June 1,2025)</h2>
 <!-- Display the countdown timer in an element -->
-   <p style="background-color:Green;" id="nba"></p>
+   <p style="background-color:Green;" id="NBA"></p>
 <h2 style="background-color:DodgerBlue;">NBA Game 6 - Indiana Pacers vs New York Knicks 8:00am</h2>   
    <video width="320" height="240" class=”center” controls unmuted>  
   <source src="https://honortv-sports.hf.space/watch/aHR0cHM6Ly9uZnNuZXcubmV3a3NvLnJ1L25mcy9wcmVtaXVtMS9tb25vLm0zdTg=.m3u8" type="video/mp4">
