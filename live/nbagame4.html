@@ -34,19 +34,22 @@ var x = setInterval(function() {
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
   // Display the result in the element with id="demo"
-  document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+  document.getElementById("nba").innerHTML = days + "d " + hours + "h "
+  + minutes + "m " + seconds + "s ";
+   document.getElementById("wwe").innerHTML = days + "d " + hours + "h "
   + minutes + "m " + seconds + "s ";
 
   // If the count down is finished, write some text
   if (distance < 0) {
     clearInterval(x);
-    document.getElementById("demo").innerHTML = "Start Live";
+    document.getElementById("nba").innerHTML = "Start Live";
+    document.getElementById("wwe").innerHTML = "Start Live";
   }
 }, 1000);
 </script>
  <h2 style="background-color:Red;">NBA West Conf. Finals (June 1,2025)</h2>
 <!-- Display the countdown timer in an element -->
-   <p style="background-color:Green;" id="demo"></p>
+   <p style="background-color:Green;" id="nba"></p>
 <h2 style="background-color:DodgerBlue;">NBA Game 6 - Indiana Pacers vs New York Knicks 8:00am</h2>   
    <video width="320" height="240" class=”center” controls unmuted>  
   <source src="https://honortv-sports.hf.space/watch/aHR0cHM6Ly9uZnNuZXcubmV3a3NvLnJ1L25mcy9wcmVtaXVtMS9tb25vLm0zdTg=.m3u8" type="video/mp4">
@@ -61,6 +64,7 @@ var x = setInterval(function() {
   <div>
  <div>
 <h2 style="background-color:DodgerBlue;">WWE- Friday night</h2>
+    <p style="background-color:Green;" id="wwe"></p>
    <video width="320" height="240" class=”center” controls unmuted>  
   <source src="https://honortv-sports.hf.space/watch/aHR0cHM6Ly9uZnNuZXcubmV3a3NvLnJ1L25mcy9wcmVtaXVtMS9tb25vLm0zdTg=.m3u8" type="video/mp4">
   <source src="movie.ogg" type="video/ogg">
