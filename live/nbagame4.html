@@ -17,7 +17,7 @@ body {
 
 <script>
 // Countdown #1 - NBA
-var countDownDateNBA = new Date("June 1, 2025 8:00:00").getTime();
+var countDownDateNBA = new Date("June 6, 2025 8:30:00").getTime();
 
 var x1 = setInterval(function() {
   var now = new Date().getTime();
@@ -37,7 +37,7 @@ var x1 = setInterval(function() {
 }, 1000);
 
 // Countdown #2 - WWE
-var countDownDateConcert = new Date("June 1, 2025 8:00:00").getTime();
+var countDownDateWWE = new Date("June 1, 2025 8:00:00").getTime();
 
 var x2 = setInterval(function() {
   var now = new Date().getTime();
@@ -52,12 +52,12 @@ var x2 = setInterval(function() {
 
   if (distance < 0) {
     clearInterval(x2);
-    document.getElementById("WWE").innerHTML = "WWE Started";
+    document.getElementById("WWE").innerHTML = "Down";
   }
 }, 1000);
 
    // Countdown #3 - UFC
-var countDownDateConcert = new Date("June 1, 2025 8:00:00").getTime();
+var countDownDateUFC = new Date("June 1, 2025 8:00:00").getTime();
 
 var x2 = setInterval(function() {
   var now = new Date().getTime();
@@ -72,14 +72,14 @@ var x2 = setInterval(function() {
 
   if (distance < 0) {
     clearInterval(x2);
-    document.getElementById("UFC").innerHTML = "UFC Started";
+    document.getElementById("UFC").innerHTML = "Down";
   }
 }, 1000);
 </script>
  <h2 style="background-color:Red;">NBA West Conf. Finals (June 1,2025)</h2>
 <!-- Display the countdown timer in an element -->
    <p style="background-color:Green;" id="NBA"></p>
-<h2 style="background-color:DodgerBlue;">NBA Game 6 - Indiana Pacers vs New York Knicks 8:00am</h2>   
+<h2 style="background-color:DodgerBlue;">NBA GAME 1-Indiana Pacers vs Oklahoma City Thunder 8:30am</h2>   
    <video width="320" height="240" class=”center” controls unmuted>  
   <source src="https://honortv-sports.hf.space/proxy?url=https%3A//zekonew.newkso.ru/zeko/premium338/mono.m3u8" type="video/mp4">
   <source src="movie.ogg" type="video/ogg">
