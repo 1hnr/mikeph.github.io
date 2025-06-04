@@ -55,26 +55,6 @@ var x2 = setInterval(function() {
     document.getElementById("WWE").innerHTML = "WWE Started";
   }
 }, 1000);
-
-   // Countdown #3 - UFC
-var countDownDateUFC = new Date("June 1, 2025 8:00:00").getTime();
-
-var x2 = setInterval(function() {
-  var now = new Date().getTime();
-  var distance = countDownDateUFC - now;
-
-  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-  document.getElementById("UFC").innerHTML = "UFC Countdown: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-
-  if (distance < 0) {
-    clearInterval(x2);
-    document.getElementById("UFC").innerHTML = "Down";
-  }
-}, 1000);
 </script>
  <h2 style="background-color:Red;">NBA Finals (June 6, 2025)</h2>
 <!-- Display the countdown timer in an element -->
