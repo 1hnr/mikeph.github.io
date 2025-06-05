@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Korean Central TV - Live</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    #videoContainer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    video {
+      max-width: 100%;
+      max-height: 100%;
+      transform-origin: center center;
+    }
+  </style>
+</head>
+<body>
+  <div id="videoContainer">
+    <video id="liveVideo" autoplay muted playsinline controls poster="https://i.imgur.com/CnphStu.png"></video>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    const video = document.getElementById('liveVideo');
+    const streamURL = "https://hipaf6u2j3pwygg.nice-flower.store/v3/director/VE1MTM1MGFmMDIzODI3LTk3Y2EtMDZhNC0yNTA3LWY0M2Q4NmE0/master.m3u8?md5=sY61gOgYPGXwEHzxZA4kkw&expires=1748760406&net=MjE2LjEzMS44Mi4yNDg%3D";
+
+    if (Hls.isSupported()) {
+      const hls = new Hls({
+        xhrSetup: function (xhr) {
+          xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (Linux; Android 10; Pixel 3 XL) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.7049.38 Mobile Safari/537.36 EdgA/134.0.3124.105');
+          xhr.setRequestHeader('Referer', 'https://ppv.wtf/');
+        }
+      });
+      hls.loadSource(streamURL);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        video.play();
+      });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = streamURL;
+      video.play();
+    }
+
+    // Auto-rotate
+    function rotateVideo() {
+      const angle = window.screen.orientation?.angle || window.orientation || 0;
+      video.style.transform = `rotate(${angle}deg)`;
+    }
+
+    window.addEventListener("orientationchange", rotateVideo);
+    window.addEventListener("load", rotateVideo);
+  </script>
+</body>
+</html>
