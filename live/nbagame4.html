@@ -1,79 +1,84 @@
 <!DOCTYPE html>
-<center>
-<html>
+<html lang="en">
 <head>
-   <style>
-body {
-  background-image: url('https://i.imgur.com/0uRLzUW.jpeg');
-}
-       p {text-align: center;}
- p {
-  text-align: center;
-  font-size: 20px;
-  margin-top: 0px;
-}
-   </style>
-  
+  <meta charset="UTF-8">
+  <title>Sports Countdown</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-image: url('https://i.imgur.com/0uRLzUW.jpeg');
+      background-size: cover;
+      background-attachment: fixed;
+      text-align: center;
+    }
 
-<script>
-// Countdown #1 - NBA
-var countDownDateNBA = new Date("June 6, 2025 8:30:00").getTime();
+    h2 {
+      margin: 10px;
+      padding: 10px;
+      color: white;
+    }
 
-var x1 = setInterval(function() {
-  var now = new Date().getTime();
-  var distance = countDownDateNBA - now;
+    p {
+      font-size: 20px;
+      margin: 5px 0;
+      background-color: rgba(0, 128, 0, 0.8);
+      color: white;
+      padding: 10px;
+      display: inline-block;
+    }
 
-  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    video {
+      margin: 10px auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
 
-  document.getElementById("NBA").innerHTML = "NBA Countdown: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+  <h2 style="background-color:Red;">NBA Finals (June 6, 2025)</h2>
+  <p id="NBA">Loading NBA countdown...</p>
+  <h2 style="background-color:DodgerBlue;">NBA GAME 1 - Indiana Pacers vs Oklahoma City Thunder (8:30 AM)</h2>
+  <video width="320" height="240" controls autoplay muted>
+    <source src="https://honortv-sports.hf.space/proxy?url=https%3A//zekonew.newkso.ru/zeko/premium338/mono.m3u8" type="application/x-mpegURL">
+    Your browser does not support the video tag.
+  </video>
 
-  if (distance < 0) {
-    clearInterval(x1);
-    document.getElementById("NBA").innerHTML = "NBA Started";
-  }
-}, 1000);
+  <p id="WWE">Loading WWE countdown...</p>
+  <h2 style="background-color:DodgerBlue;">AEW: Wednesday Night Dynamite (8:00 AM)</h2>
+  <video width="320" height="240" controls autoplay muted>
+    <source src="https://honortv-sports.hf.space/watch/aHR0cHM6Ly96ZWtvbmV3Lm5ld2tzby5ydS96ZWtvL3ByZW1pdW0zMzYvbW9uby5tM3U4.m3u8" type="application/x-mpegURL">
+    Your browser does not support the video tag.
+  </video>
 
-// Countdown #2 - WWE
-var countDownDateWWE = new Date("June 5, 2025 8:00:00").getTime();
+  <script>
+    // Reusable countdown function
+    function setupCountdown(id, targetDateStr, label) {
+      const targetDate = new Date(targetDateStr).getTime();
 
-var x2 = setInterval(function() {
-  var now = new Date().getTime();
-  var distance = countDownDateWWE - now;
+      const x = setInterval(function () {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
 
-  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        if (distance < 0) {
+          clearInterval(x);
+          document.getElementById(id).textContent = `${label} Started`;
+          return;
+        }
 
-  document.getElementById("WWE").innerHTML = "WWE Countdown: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  if (distance < 0) {
-    clearInterval(x2);
-    document.getElementById("WWE").innerHTML = "WWE Started";
-  }
-}, 1000);
-</script>
- <h2 style="background-color:Red;">NBA Finals (June 6, 2025)</h2>
-<!-- Display the countdown timer in an element -->
-   <p style="background-color:Green;" id="NBA"></p>
-<h2 style="background-color:DodgerBlue;">NBA GAME 1-Indiana Pacers vs Oklahoma City Thunder 8:30am</h2>   
-   <video width="320" height="240" class=”center” controls unmuted>  
-  <source src="https://honortv-sports.hf.space/proxy?url=https%3A//zekonew.newkso.ru/zeko/premium338/mono.m3u8" type="video/mp4">
-  <source src="movie.ogg" type="video/ogg">
-  Your browser does not support the video tag.
-</video>
-   <p style="background-color:Green;" id="WWE"></p>
-   <h2 style="background-color:DodgerBlue;">AEW: Wednesday Night Dynamite 8:00am</h2>   
-   <video width="320" height="240" class=”center” controls unmuted>  
-  <source src="https://honortv-sports.hf.space/watch/aHR0cHM6Ly96ZWtvbmV3Lm5ld2tzby5ydS96ZWtvL3ByZW1pdW0zMzYvbW9uby5tM3U4.m3u8" type="video/mp4">
-  <source src="movie.ogg" type="video/ogg">
-  Your browser does not support the video tag.
-</video>
+        document.getElementById(id).textContent =
+          `${label} Countdown: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }, 1000);
+    }
 
+    setupCountdown("NBA", "June 6, 2025 08:30:00", "NBA");
+    setupCountdown("WWE", "June 5, 2025 08:00:00", "WWE");
+  </script>
 
 </body>
 </html>
-</center>
