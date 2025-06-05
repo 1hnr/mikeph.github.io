@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Channel 1 Live Stream</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    video {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      outline: none;
+    }
+    #logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 100px;
+      z-index: 10;
+    }
+    #startButton {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px 40px;
+      font-size: 18px;
+      cursor: pointer;
+      background-color: #fff;
+      border: none;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <img id="logo" src="https://hdidjd.png" alt="Channel Logo">
+  <button id="startButton">Start Stream</button>
+  <video id="video" controls autoplay muted></video>
+
+  <script>
+    async function initPlayer() {
+      const manifestUri = 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/cg_a2z.mpd';
+
+      const player = new shaka.Player(document.getElementById('video'));
+
+      player.configure({
+        drm: {
+          clearKeys: {
+            "f703e4c8ec9041eeb5028ab4248fa094": "c22f2162e176eee6273a5d0b68d19530"
+          }
+        }
+      });
+
+      try {
+        await player.load(manifestUri);
+        console.log('The video has been loaded successfully!');
+      } catch (e) {
+        console.error('Error loading video:', e);
+      }
+    }
+
+    async function startExperience() {
+      const video = document.getElementById('video');
+      const startButton = document.getElementById('startButton');
+      startButton.style.display = 'none';
+
+      await initPlayer();
+
+      // Request fullscreen
+      if (video.requestFullscreen) {
+        await video.requestFullscreen();
+      } else if (video.webkitRequestFullscreen) {
+        await video.webkitRequestFullscreen();
+      } else if (video.msRequestFullscreen) {
+        await video.msRequestFullscreen();
+      }
+
+      // Lock to landscape
+      if (screen.orientation && screen.orientation.lock) {
+        try {
+          await screen.orientation.lock('landscape');
+        } catch (e) {
+          console.warn('Orientation lock failed:', e);
+        }
+      }
+    }
+
+    document.getElementById('startButton').addEventListener('click', startExperience);
+  </script>
+</body>
+</html>
