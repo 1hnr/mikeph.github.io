@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sports Countdown with HLS Streaming</title>
+  <style>
+    body {
+      background-image: url('https://i.imgur.com/0uRLzUW.jpeg');
+      background-size: cover;
+      background-attachment: fixed;
+      text-align: center;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    h2 {
+      margin: 10px;
+      padding: 10px;
+      color: white;
+    }
+
+    p {
+      font-size: 20px;
+      margin: 5px 0;
+      background-color: rgba(0, 128, 0, 0.8);
+      color: white;
+      padding: 10px;
+      display: inline-block;
+    }
+
+    video {
+      margin: 10px auto;
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 style="background-color:Red;">NBA Finals (June 6, 2025)</h2>
+  <p id="NBA">Loading NBA countdown...</p>
+  <h2 style="background-color:DodgerBlue;">NBA GAME 1 - Indiana Pacers vs Oklahoma City Thunder (8:30 AM)</h2>
+  <video id="nbaVideo" controls></video>
+
+  <p id="WWE">Loading WWE countdown...</p>
+  <h2 style="background-color:DodgerBlue;">AEW: Wednesday Night Dynamite (8:00 AM)</h2>
+  <video id="wweVideo" controls></video>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    // Countdown logic (same as previous)
+
+    // HLS.js setup for NBA video
+    if (Hls.isSupported()) {
+      const video = document.getElementById('nbaVideo');
+      const hls = new Hls();
+      hls.loadSource('https://honortv-sports.hf.space/proxy?url=https%3A//zekonew.newkso.ru/zeko/premium338/mono.m3u8');
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        video.play();
+      });
+    } else if (document.getElementById('nbaVideo').canPlayType('application/vnd.apple.mpegurl')) {
+      document.getElementById('nbaVideo').src = 'https://honortv-sports.hf.space/proxy?url=https%3A//zekonew.newkso.ru/zeko/premium338/mono.m3u8';
+      document.getElementById('nbaVideo').addEventListener('loadedmetadata', function () {
+        this.play();
+      });
+    }
+
+    // HLS.js setup for WWE video
+    if (Hls.isSupported()) {
+      const video = document.getElementById('wweVideo');
+      const hls = new Hls();
+      hls.loadSource('https://honortv-sports.hf.space/watch/aHR0cHM6Ly96ZWtvbmV3Lm5ld2tzby5ydS96ZWtvL3ByZW1pdW0zMzYvbW9uby5tM3U4.m3u8');
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        video.play();
+      });
+    } else if (document.getElementById('wweVideo').canPlayType('application/vnd.apple.mpegurl')) {
+      document.getElementById('wweVideo').src = 'https://honortv-sports.hf.space/watch/aHR0cHM6Ly96ZWtvbmV3Lm5ld2tzby5ydS96ZWtvL3ByZW1pdW0zMzYvbW9uby5tM3U4.m3u8';
+      document.getElementById('wweVideo').addEventListener('loadedmetadata', function () {
+        this.play();
+      });
+    }
+  </script>
+
+</body>
+</html>
