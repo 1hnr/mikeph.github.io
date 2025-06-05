@@ -32,15 +32,15 @@
 
   <script>
     async function initPlayer() {
-      const manifestUri = 'https://jdjdjd.jdk.mpd';
+      const manifestUri = 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/cg_a2z.mpd';
 
       const licenseServerUri = '';
       const clearKey = {
         "keys": [
           {
             "kty": "oct",
-            "kid": "748473873838839398393839",
-            "k": "748383738383638373837"
+            "kid": "f703e4c8ec9041eeb5028ab4248fa094",
+            "k": "c22f2162e176eee6273a5d0b68d19530"
           }
         ],
         "type": "temporary"
@@ -51,7 +51,7 @@
       player.configure({
         drm: {
           clearKeys: {
-            "748473873838839398393839": "748383738383638373837"
+            "f703e4c8ec9041eeb5028ab4248fa094": "c22f2162e176eee6273a5d0b68d19530"
           }
         }
       });
