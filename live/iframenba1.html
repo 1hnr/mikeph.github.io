@@ -1,0 +1,35 @@
+<!-- Include Radiant Media Player JavaScript file -->
+<script src="https://cdn.radiantmediatechs.com/rmp/10.1.1/js/rmp.min.js"></script>
+
+<!-- Player container element -->
+<div id="rmp"></div>
+
+<script>
+  const src = {
+    hls: 'https://live.bbapcall.com/live/sd-24-4739572.m3u8?txSecret=e03c2de148ef7d66ab97c655cb9c29e5&txTime=684172DC'
+  };
+
+  const settings = {
+    licenseKey: 'your-license-key', // Replace with your actual license key
+    src,
+    width: 640,
+    height: 360,
+    autoplay: true,
+    muted: false, // Start with sound enabled
+    contentMetadata: {
+      poster: ['https://your-poster-url.jpg'] // Optional: Replace with your poster image URL
+    }
+  };
+
+  const rmp = new RadiantMP('rmp');
+
+  async function initRmpPlayer() {
+    try {
+      await rmp.init(settings);
+    } catch (error) {
+      console.error('Radiant Media Player failed to initialize', error);
+    }
+  }
+
+  initRmpPlayer();
+</script>
