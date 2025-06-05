@@ -26,6 +26,9 @@
     const video = document.getElementById('video');
     const streamURL = "https://ott.udptv.org/stream/udptvus/tnt/master.m3u8?u=discord.gg/civ3&p=eeaf011ae6d8cdbf0200cc0234f54fdc95d7b5b158d22258efd49d7e36275c7a";
 
+    // Attempt to lock landscape orientation
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('landscape').catch(console.warn);
     }
 
     if (Hls.isSupported()) {
