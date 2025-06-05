@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, orientation=landscape" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NBA Live Stream</title>
   <style>
     body, html {
@@ -25,11 +25,6 @@
   <script>
     const video = document.getElementById('video');
     const streamURL = "https://ott.udptv.org/stream/udptvus/tnt/master.m3u8?u=discord.gg/civ3&p=eeaf011ae6d8cdbf0200cc0234f54fdc95d7b5b158d22258efd49d7e36275c7a";
-
-    // Attempt to lock landscape orientation
-    if (screen.orientation && screen.orientation.lock) {
-      screen.orientation.lock('landscape').catch(console.warn);
-    }
 
     if (Hls.isSupported()) {
       const hls = new Hls({
