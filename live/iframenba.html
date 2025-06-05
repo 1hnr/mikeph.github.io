@@ -33,4 +33,56 @@
     }
   </style>
 </head>
-<body
+<body>
+  <div id="videoContainer">
+    <video
+      id="liveVideo"
+      autoplay
+      muted
+      playsinline
+      controls
+      preload="auto"
+      poster="https://i.imgur.com/CnphStu.png">
+    </video>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    const video = document.getElementById('liveVideo');
+    const streamURL = "https://hipaf6u2j3pwygg.nice-flower.store/v3/director/VE1ODVmMjkyM2QzZTM1LTk2OGItM2U2NC1kNjJmLTk2ZTkzMmRh/master.m3u8?md5=h_CFgim7jJUTGW1GvZTb8A&expires=1749100200&net=MTgwLjE5MC4xNzUuMTcz";
+
+    function tryAutoPlay() {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.warn("Autoplay failed:", error);
+        });
+      }
+    }
+
+    if (Hls.isSupported()) {
+      const hls = new Hls({
+        xhrSetup: function (xhr) {
+          xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (Linux; Android 10; Pixel 3 XL) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.7049.38 Mobile Safari/537.36 EdgA/134.0.3124.105');
+          xhr.setRequestHeader('Referer', 'https://ppv.wtf/');
+        }
+      });
+      hls.loadSource(streamURL);
+      hls.attachMedia(video);
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = streamURL;
+    }
+
+    video.addEventListener('canplay', tryAutoPlay);
+
+    // Auto-rotate based on device orientation
+    function rotateVideo() {
+      const angle = window.screen.orientation?.angle || window.orientation || 0;
+      video.style.transform = `rotate(${angle}deg)`;
+    }
+
+    window.addEventListener("orientationchange", rotateVideo);
+    window.addEventListener("load", rotateVideo);
+  </script>
+</body>
+</html>
