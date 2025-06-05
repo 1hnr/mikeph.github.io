@@ -1,70 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Channel 1 Live Stream</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, orientation=landscape" />
+  <title>Live Stream - MLB</title>
   <style>
-    body {
+    html, body {
       margin: 0;
-      background-color: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      padding: 0;
+      background: black;
+      height: 100%;
+      overflow: hidden;
     }
     video {
-      width: 80%;
-      max-width: 960px;
-      outline: none;
-    }
-    #logo {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      width: 100px;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
     }
   </style>
 </head>
 <body>
-  <img id="logo" src="https://hdidjd.png" alt="Channel Logo">
-  <video id="video" controls autoplay></video>
 
-  <script>
-    async function initPlayer() {
-      const manifestUri = 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/cg_a2z.mpd';
+<video id="liveStream" autoplay playsinline controls muted="false">
+  <source src="https://hipaf6u2j3pwygg.nice-flower.store/v3/director/VE1OWUzMmMwNDYzMDRlLWI4MTktNTdhNC1kYTU5LTcwMDc3MTky/master.m3u8?md5=HeFHhE3QUSebvcmHzzwZnQ&expires=1749102000&net=MTgwLjE5MC4xNzUuMTcz" type="application/x-mpegURL">
+  Your browser does not support the video tag.
+</video>
 
-      const licenseServerUri = '';
-      const clearKey = {
-        "keys": [
-          {
-            "kty": "oct",
-            "kid": "f703e4c8ec9041eeb5028ab4248fa094",
-            "k": "c22f2162e176eee6273a5d0b68d19530"
-          }
-        ],
-        "type": "temporary"
-      };
+<script>
+  const video = document.getElementById('liveStream');
 
-      const player = new shaka.Player(document.getElementById('video'));
+  // Attempt to autoplay and unmute
+  video.muted = false;
+  video.play().catch(error => {
+    console.warn("Autoplay might be blocked by the browser. User interaction may be required.", error);
+  });
 
-      player.configure({
-        drm: {
-          clearKeys: {
-            "f703e4c8ec9041eeb5028ab4248fa094": "c22f2162e176eee6273a5d0b68d19530"
-          }
-        }
-      });
+  // Lock to landscape (works only in fullscreen on mobile, and may still require user interaction)
+  if (screen.orientation && screen.orientation.lock) {
+    screen.orientation.lock('landscape').catch(err => {
+      console.log("Orientation lock failed or not supported:", err);
+    });
+  }
+</script>
 
-      try {
-        await player.load(manifestUri);
-        console.log('The video has been loaded successfully!');
-      } catch (e) {
-        console.error('Error loading video:', e);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', initPlayer);
-  </script>
 </body>
 </html>
