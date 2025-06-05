@@ -68,31 +68,34 @@
     }
 
     async function startExperience() {
-      const video = document.getElementById('video');
-      const startButton = document.getElementById('startButton');
-      startButton.style.display = 'none';
+  const video = document.getElementById('video');
+  const startButton = document.getElementById('startButton');
+  startButton.style.display = 'none';
 
-      await initPlayer();
+  await initPlayer();
 
-      // Request fullscreen
-      if (video.requestFullscreen) {
-        await video.requestFullscreen();
-      } else if (video.webkitRequestFullscreen) {
-        await video.webkitRequestFullscreen();
-      } else if (video.msRequestFullscreen) {
-        await video.msRequestFullscreen();
-      }
+  // Unmute the video after user interaction
+  video.muted = false;
+  video.volume = 1.0;
 
-      // Lock to landscape
-      if (screen.orientation && screen.orientation.lock) {
-        try {
-          await screen.orientation.lock('landscape');
-        } catch (e) {
-          console.warn('Orientation lock failed:', e);
-        }
-      }
+  // Request fullscreen
+  if (video.requestFullscreen) {
+    await video.requestFullscreen();
+  } else if (video.webkitRequestFullscreen) {
+    await video.webkitRequestFullscreen();
+  } else if (video.msRequestFullscreen) {
+    await video.msRequestFullscreen();
+  }
+
+  // Lock to landscape
+  if (screen.orientation && screen.orientation.lock) {
+    try {
+      await screen.orientation.lock('landscape');
+    } catch (e) {
+      console.warn('Orientation lock failed:', e);
     }
-
+  }
+}
     document.getElementById('startButton').addEventListener('click', startExperience);
   </script>
 </body>
