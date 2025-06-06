@@ -2,55 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Color Spin Wheel</title>
+  <title>Name Spin Wheel</title>
   <style>
     body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      font-family: Arial, sans-serif;
+      text-align: center;
       background: #f0f0f0;
-      font-family: sans-serif;
+      margin: 0;
+      padding: 40px;
     }
 
-    .wheel {
-      width: 300px;
-      height: 300px;
-      border-radius: 50%;
-      border: 10px solid #fff;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
-      transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
-    }
-
-    .segment {
-      width: 50%;
-      height: 50%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform-origin: 0% 0%;
-      clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
-    }
-
-    .segment:nth-child(1) { background: red;    transform: rotate(0deg); }
-    .segment:nth-child(2) { background: blue;   transform: rotate(60deg); }
-    .segment:nth-child(3) { background: green;  transform: rotate(120deg); }
-    .segment:nth-child(4) { background: yellow; transform: rotate(180deg); }
-    .segment:nth-child(5) { background: orange; transform: rotate(240deg); }
-    .segment:nth-child(6) { background: purple; transform: rotate(300deg); }
-
-    .needle {
-      width: 0;
-      height: 0;
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-bottom: 30px solid black;
-      position: absolute;
-      top: -30px;
-      left: calc(50% - 20px);
+    canvas {
+      margin-top: 20px;
     }
 
     button {
@@ -59,33 +22,85 @@
       font-size: 16px;
       cursor: pointer;
     }
-
   </style>
 </head>
 <body>
-
-  <div class="needle"></div>
-  <div class="wheel" id="wheel">
-    <div class="segment"></div>
-    <div class="segment"></div>
-    <div class="segment"></div>
-    <div class="segment"></div>
-    <div class="segment"></div>
-    <div class="segment"></div>
-  </div>
-
-  <button onclick="spinWheel()">Spin</button>
+  <h2>Tap to Spin</h2>
+  <canvas id="wheelCanvas" width="500" height="500"></canvas>
+  <br>
+  <button onclick="spin()">🎯 Spin</button>
 
   <script>
-    let rotation = 0;
+    const names = ["Ali", "Hanna", "Gabriel", "Fatima", "Eric", "Diya", "Charles", "Beatriz"];
+    const colors = ["#3498db", "#27ae60", "#f39c12", "#e74c3c", "#2980b9", "#2ecc71", "#f1c40f", "#c0392b"];
 
-    function spinWheel() {
-      const wheel = document.getElementById('wheel');
-      const randomRotation = Math.floor(3600 + Math.random() * 360); // 10+ full spins
-      rotation += randomRotation;
-      wheel.style.transform = `rotate(${rotation}deg)`;
+    const canvas = document.getElementById("wheelCanvas");
+    const ctx = canvas.getContext("2d");
+    const radius = canvas.width / 2;
+    let startAngle = 0;
+    let arc = Math.PI * 2 / names.length;
+    let spinAngle = 0;
+    let spinning = false;
+
+    function drawWheel() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < names.length; i++) {
+        const angle = startAngle + i * arc;
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.beginPath();
+        ctx.moveTo(radius, radius);
+        ctx.arc(radius, radius, radius, angle, angle + arc);
+        ctx.fill();
+
+        // Text
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.translate(radius, radius);
+        ctx.rotate(angle + arc / 2);
+        ctx.textAlign = "right";
+        ctx.font = "bold 16px sans-serif";
+        ctx.fillText(names[i], radius - 10, 10);
+        ctx.restore();
+      }
+
+      // Pointer
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      ctx.moveTo(radius - 10, 10);
+      ctx.lineTo(radius + 10, 10);
+      ctx.lineTo(radius, 40);
+      ctx.closePath();
+      ctx.fill();
     }
-  </script>
 
+    function spin() {
+      if (spinning) return;
+      spinning = true;
+      let spinTime = 0;
+      const totalSpinTime = 4000;
+      const spinIncrement = () => {
+        spinTime += 30;
+        spinAngle += Math.random() * 10 + 5;
+        startAngle += (spinAngle * Math.PI / 180);
+        drawWheel();
+        if (spinTime < totalSpinTime) {
+          requestAnimationFrame(spinIncrement);
+        } else {
+          spinning = false;
+          showWinner();
+        }
+      };
+      spinIncrement();
+    }
+
+    function showWinner() {
+      const degrees = (startAngle * 180 / Math.PI) % 360;
+      const index = names.length - Math.floor(degrees / (360 / names.length)) - 1;
+      const winner = names[(index + names.length) % names.length];
+      alert("🎉 Winner: " + winner);
+    }
+
+    drawWheel();
+  </script>
 </body>
 </html>
