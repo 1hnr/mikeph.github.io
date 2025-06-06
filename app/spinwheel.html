@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Color Spin Wheel</title>
   <style>
     body {
@@ -12,79 +11,81 @@
       justify-content: center;
       height: 100vh;
       background: #f0f0f0;
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
     }
 
-    .wheel-container {
-      position: relative;
+    .wheel {
       width: 300px;
       height: 300px;
       border-radius: 50%;
+      border: 10px solid #fff;
+      position: relative;
       overflow: hidden;
-      border: 5px solid #333;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
       transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
     }
 
-    .slice {
-      position: absolute;
+    .segment {
       width: 50%;
       height: 50%;
+      position: absolute;
       top: 50%;
       left: 50%;
       transform-origin: 0% 0%;
       clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
     }
 
-    .btn {
-      margin-top: 20px;
+    .segment:nth-child(1) { background: red;    transform: rotate(0deg); }
+    .segment:nth-child(2) { background: blue;   transform: rotate(60deg); }
+    .segment:nth-child(3) { background: green;  transform: rotate(120deg); }
+    .segment:nth-child(4) { background: yellow; transform: rotate(180deg); }
+    .segment:nth-child(5) { background: orange; transform: rotate(240deg); }
+    .segment:nth-child(6) { background: purple; transform: rotate(300deg); }
+
+    .needle {
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 30px solid black;
+      position: absolute;
+      top: -30px;
+      left: calc(50% - 20px);
+    }
+
+    button {
+      margin-top: 30px;
       padding: 10px 20px;
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
     }
 
-    .pointer {
-      width: 0;
-      height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-bottom: 30px solid red;
-      position: absolute;
-      top: -30px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-    }
   </style>
 </head>
 <body>
 
-<div class="pointer"></div>
-<div id="wheel" class="wheel-container"></div>
-<button class="btn" onclick="spinWheel()">Spin</button>
+  <div class="needle"></div>
+  <div class="wheel" id="wheel">
+    <div class="segment"></div>
+    <div class="segment"></div>
+    <div class="segment"></div>
+    <div class="segment"></div>
+    <div class="segment"></div>
+    <div class="segment"></div>
+  </div>
 
-<script>
-  const colors = ["#FF5733", "#33FF57", "#3357FF", "#F1C40F", "#9B59B6", "#E67E22", "#1ABC9C", "#E74C3C"];
-  const wheel = document.getElementById("wheel");
+  <button onclick="spinWheel()">Spin</button>
 
-  // Create slices
-  const numSlices = colors.length;
-  for (let i = 0; i < numSlices; i++) {
-    const slice = document.createElement("div");
-    slice.className = "slice";
-    slice.style.backgroundColor = colors[i];
-    slice.style.transform = `rotate(${(360 / numSlices) * i}deg) skewY(-60deg)`;
-    wheel.appendChild(slice);
-  }
+  <script>
+    let rotation = 0;
 
-  let rotation = 0;
-
-  function spinWheel() {
-    const extraRotations = 360 * 5; // 5 full spins
-    const randomDeg = Math.floor(Math.random() * 360);
-    rotation += extraRotations + randomDeg;
-    wheel.style.transform = `rotate(${rotation}deg)`;
-  }
-</script>
+    function spinWheel() {
+      const wheel = document.getElementById('wheel');
+      const randomRotation = Math.floor(3600 + Math.random() * 360); // 10+ full spins
+      rotation += randomRotation;
+      wheel.style.transform = `rotate(${rotation}deg)`;
+    }
+  </script>
 
 </body>
 </html>
