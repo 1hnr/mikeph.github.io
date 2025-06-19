@@ -1,3 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stream Browser</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #fff;
+    }
+    header {
+      background: #1e1e1e;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    #content {
+      display: flex;
+      height: calc(100vh - 60px);
+    }
+    #playlist {
+      width: 300px;
+      background: #1a1a1a;
+      overflow-y: auto;
+      padding: 1rem;
+      border-right: 1px solid #333;
+    }
+    #player {
+      flex: 1;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .channel {
+      padding: 0.5rem;
+      cursor: pointer;
+      border-bottom: 1px solid #333;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .channel:hover {
+      background: #333;
+    }
+    .channel.active {
+      background: #555;
+      font-weight: bold;
+    }
+    .channel img {
+      height: 24px;
+      width: 24px;
+      object-fit: contain;
+    }
+    video, iframe {
+      width: 100%;
+      max-width: 800px;
+      height: 450px;
+      border: 2px solid #444;
+      border-radius: 8px;
+      background: #000;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.10/shaka-player.compiled.js"></script>
+</head>
+<body>
+  <header>Stream Browser</header>
+  <div id="content">
+    <div id="playlist"></div>
+    <div id="player">
+      <video id="videoPlayer" controls autoplay style="display:none;"></video>
+      <iframe id="ytPlayer" frameborder="0" allowfullscreen style="display:none;"></iframe>
+    </div>
+  </div>
+
+  <script>
+    const streams = [
       {
         name: 'TV5',
         logo: 'https://i.imgur.com/Ddyfzrn.png',
@@ -726,3 +807,79 @@ name: 'Net 25',
         manifestUri: 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/pl_sdi2.mpd',
         clearKey: { '2f3056cac18d4e31a59de39767042b03': '83728946b898141ae411572f9f5fce0d' },
         category: "Pilipinas Live"
+      }
+    ];
+
+    const playlistDiv = document.getElementById('playlist');
+    const videoPlayer = document.getElementById('videoPlayer');
+    const ytPlayer = document.getElementById('ytPlayer');
+
+    function clearPlayer() {
+      videoPlayer.pause();
+      videoPlayer.style.display = 'none';
+      ytPlayer.style.display = 'none';
+    }
+
+    function playStream(stream) {
+      clearPlayer();
+      document.querySelectorAll('.channel').forEach(c => c.classList.remove('active'));
+      const active = document.querySelector(`.channel[data-name="${stream.name}"]`);
+      if (active) active.classList.add('active');
+
+      if (stream.type === 'youtube') {
+        ytPlayer.src = stream.embedUrl;
+        ytPlayer.style.display = 'block';
+      } else if (stream.type === 'hls') {
+        videoPlayer.innerHTML = `<source src="${stream.manifestUri}" type="application/x-mpegURL">`;
+        videoPlayer.style.display = 'block';
+        videoPlayer.load();
+        videoPlayer.play();
+      } else if (stream.type === 'mpegdash') {
+        videoPlayer.style.display = 'block';
+        if (shaka.Player.isBrowserSupported()) {
+          const player = new shaka.Player(videoPlayer);
+          const config = stream.clearKey
+            ? {
+                drm: {
+                  clearKeys: stream.clearKey
+                }
+              }
+            : {};
+          player.configure(config);
+          player.load(stream.manifestUri).then(() => videoPlayer.play());
+        } else {
+          alert('Shaka Player is not supported in this browser.');
+        }
+      }
+    }
+
+    function showStreams(streams) {
+      const groups = streams.reduce((acc, stream) => {
+        (acc[stream.category || 'Other'] ||= []).push(stream);
+        return acc;
+      }, {});
+
+      playlistDiv.innerHTML = '';
+
+      for (const [group, items] of Object.entries(groups)) {
+        const title = document.createElement('h3');
+        title.textContent = group;
+        playlistDiv.appendChild(title);
+
+        items.forEach(stream => {
+          const div = document.createElement('div');
+          div.className = 'channel';
+          div.setAttribute('data-name', stream.name);
+          div.innerHTML = `${stream.logo ? `<img src="${stream.logo}" alt="">` : ''} ${stream.name}`;
+          div.onclick = () => playStream(stream);
+          playlistDiv.appendChild(div);
+        });
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      showStreams(streams);
+    });
+  </script>
+</body>
+</html>
