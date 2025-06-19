@@ -45,13 +45,13 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.4rem;
+      padding: 0.5rem;
       cursor: pointer;
       border-bottom: 1px solid #333;
-      transition: background 0.3s;
+      border-radius: 6px;
     }
     .channel:hover, .channel.active {
-      background: #333;
+      background: #444;
     }
     .channel img {
       width: 30px;
@@ -83,7 +83,7 @@
       <div id="channelList"></div>
     </div>
     <div id="player">
-      <video id="videoPlayer" controls autoplay></video>
+      <video id="videoPlayer" controls autoplay playsinline></video>
     </div>
   </div>
 
@@ -785,17 +785,12 @@
       }
     }
 
-    function playStream(stream) {
+    function playStream(stream, channelDiv) {
       clearPlayer();
 
+      // Highlight active channel
       document.querySelectorAll('.channel').forEach(c => c.classList.remove('active'));
-      const active = document.querySelector(`.channel[data-name="${stream.name}"]`);
-      if (active) active.classList.add('active');
-
-      if (!shaka.Player.isBrowserSupported()) {
-        alert('Shaka Player is not supported in this browser.');
-        return;
-      }
+      if (channelDiv) channelDiv.classList.add('active');
 
       const player = new shaka.Player(videoPlayer);
       currentPlayer = player;
@@ -806,16 +801,17 @@
         }
       });
 
-      player.load(stream.manifestUri)
-        .then(() => {
-          videoPlayer.play().catch(err => {
-            console.warn('Playback error:', err);
-          });
-        })
-        .catch(error => {
-          console.error('Shaka error:', error);
-          alert('Failed to load stream.');
+      // Required for autoplay to work on mobile (unmute after play)
+      videoPlayer.muted = true;
+
+      player.load(stream.manifestUri).then(() => {
+        videoPlayer.play().then(() => {
+          videoPlayer.muted = false; // unmute after playback starts
         });
+      }).catch(error => {
+        console.error('Shaka error:', error);
+        alert('Failed to load stream.');
+      });
     }
 
     function renderStreams(list) {
@@ -847,7 +843,7 @@
           div.appendChild(logo);
           div.appendChild(name);
 
-          div.onclick = () => playStream(stream);
+          div.onclick = () => playStream(stream, div);
           channelList.appendChild(div);
         });
       }
