@@ -3,34 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MPEG-DASH Stream Browser (Smart TV)</title>
+  <title>MPEG-DASH Stream Browser</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background-color: #121212;
       color: #fff;
-      font-size: 1.5rem;
     }
+
     header {
       background: #1e1e1e;
       padding: 1rem;
       text-align: center;
       font-size: 2rem;
     }
+
     #content {
       display: flex;
       height: calc(100vh - 80px);
       transition: all 0.3s ease;
     }
+
     #playlist {
-      width: 400px;
+      width: 350px;
       background: #1a1a1a;
       overflow-y: auto;
       padding: 1rem;
       border-right: 1px solid #333;
       transition: all 0.3s ease;
     }
+
     #player {
       flex: 1;
       padding: 1rem;
@@ -38,7 +41,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
+
     .channel {
       padding: 1rem;
       cursor: pointer;
@@ -46,20 +51,29 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      outline: none;
     }
-    .channel:hover, .channel:focus {
+
+    .channel:hover,
+    .channel:focus {
       background: #333;
     }
+
     .channel.active {
       background: #555;
       font-weight: bold;
     }
+
+    .channel.focused {
+      outline: 2px solid #00bcd4;
+      background: #2a2a2a;
+    }
+
     .channel img {
-      height: 40px;
-      width: 40px;
+      height: 32px;
+      width: 32px;
       object-fit: contain;
     }
+
     video {
       width: 100%;
       max-width: 960px;
@@ -68,14 +82,16 @@
       border-radius: 8px;
       background: #000;
     }
+
     #search {
       width: 100%;
       padding: 1rem;
       margin-bottom: 1rem;
       border: none;
       border-radius: 4px;
-      font-size: 1.2rem;
+      font-size: 1rem;
     }
+
     #backButton {
       display: none;
       position: absolute;
@@ -84,12 +100,13 @@
       background: #444;
       border: none;
       color: white;
-      font-size: 1.2rem;
+      font-size: 1rem;
       padding: 0.5rem 1rem;
       border-radius: 6px;
       z-index: 1000;
     }
   </style>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.10/shaka-player.compiled.js"></script>
 </head>
 <body>
@@ -792,15 +809,11 @@
     const videoPlayer = document.getElementById('videoPlayer');
     const searchInput = document.getElementById('search');
     const playlistDiv = document.getElementById('channelList');
-    const contentDiv = document.getElementById('content');
     const playlistPanel = document.getElementById('playlist');
     const backButton = document.getElementById('backButton');
     let currentPlayer = null;
-
-    function isSmartTV() {
-      const ua = navigator.userAgent.toLowerCase();
-      return /smart-tv|smarttv|appletv|tizen|webos|netcast|roku/.test(ua);
-    }
+    let focusedChannelIndex = 0;
+    let currentChannels = [];
 
     function clearPlayer() {
       if (currentPlayer && currentPlayer.destroy) {
@@ -831,8 +844,8 @@
       playlistPanel.style.display = 'block';
       backButton.style.display = 'none';
 
-      if (document.fullscreenElement) {
-        document.exitFullscreen().catch(() => {});
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        document.exitFullscreen?.().catch(() => {});
       }
     }
 
@@ -843,36 +856,25 @@
       if (active) active.classList.add('active');
 
       if (!shaka.Player.isBrowserSupported()) {
-        if (stream.hlsUri) {
-          videoPlayer.src = stream.hlsUri;
-          videoPlayer.play();
-        } else {
-          alert('Shaka Player not supported and no HLS fallback.');
-        }
+        alert('Shaka Player not supported in this browser.');
         return;
       }
 
       const player = new shaka.Player(videoPlayer);
       currentPlayer = player;
-      player.configure({
-        drm: {
-          clearKeys: stream.clearKey
-        }
-      });
+      player.configure({ drm: { clearKeys: stream.clearKey } });
+
       player.load(stream.manifestUri).then(() => {
         videoPlayer.play().catch(err => console.warn('Autoplay error:', err));
         hideSidebarAndFullscreen();
       }).catch(err => {
         console.error('Playback error:', err);
-        if (stream.hlsUri) {
-          videoPlayer.src = stream.hlsUri;
-          videoPlayer.play();
-          hideSidebarAndFullscreen();
-        }
       });
     }
 
     function renderStreams(filtered) {
+      currentChannels = filtered;
+      focusedChannelIndex = 0;
       const groups = filtered.reduce((acc, stream) => {
         (acc[stream.category || 'Other'] ||= []).push(stream);
         return acc;
@@ -887,17 +889,75 @@
         items.forEach(stream => {
           const div = document.createElement('div');
           div.className = 'channel';
-          div.setAttribute('data-name', stream.name);
           div.setAttribute('tabindex', '0');
+          div.setAttribute('data-name', stream.name);
           div.innerHTML = `${stream.logo ? `<img src="${stream.logo}" alt="">` : ''} ${stream.name}`;
           div.onclick = () => playStream(stream);
-          div.onkeydown = e => {
-            if (e.key === 'Enter') div.click();
-          };
           playlistDiv.appendChild(div);
         });
       }
+
+      updateFocus(focusedChannelIndex);
     }
+
+    function updateFocus(index) {
+      const channelElements = playlistDiv.querySelectorAll('.channel');
+      if (channelElements.length === 0) return;
+
+      channelElements.forEach(el => el.classList.remove('focused'));
+      const newFocus = channelElements[index];
+      if (newFocus) {
+        newFocus.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        newFocus.classList.add('focused');
+        newFocus.focus();
+      }
+    }
+
+    function setupKeyboardNavigation() {
+      document.addEventListener('keydown', (e) => {
+        const channelElements = playlistDiv.querySelectorAll('.channel');
+        if (playlistPanel.style.display === 'none') return;
+
+        if (e.key === 'ArrowDown') {
+          focusedChannelIndex = (focusedChannelIndex + 1) % channelElements.length;
+          updateFocus(focusedChannelIndex);
+          e.preventDefault();
+        } else if (e.key === 'ArrowUp') {
+          focusedChannelIndex = (focusedChannelIndex - 1 + channelElements.length) % channelElements.length;
+          updateFocus(focusedChannelIndex);
+          e.preventDefault();
+        } else if (e.key === 'Enter') {
+          const focusedChannel = channelElements[focusedChannelIndex];
+          if (focusedChannel) {
+            focusedChannel.click();
+          }
+          e.preventDefault();
+        } else if (e.key === 'ArrowLeft') {
+          showSidebarAndExitFullscreen();
+        } else if (e.key === 'Escape') {
+          showSidebarAndExitFullscreen();
+        }
+      });
+    }
+
+    // Swipe gesture to show playlist
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function handleSwipeGesture() {
+      if (touchEndX - touchStartX > 80) {
+        showSidebarAndExitFullscreen();
+      }
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipeGesture();
+    });
 
     searchInput.addEventListener('input', () => {
       const keyword = searchInput.value.toLowerCase();
@@ -909,17 +969,9 @@
       showSidebarAndExitFullscreen();
     });
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        showSidebarAndExitFullscreen();
-      }
-    });
-
     window.addEventListener('DOMContentLoaded', () => {
-      if (isSmartTV()) {
-        alert('Smart TV detected. Optimizing experience...');
-      }
       renderStreams(streams);
+      setupKeyboardNavigation();
     });
   </script>
 </body>
