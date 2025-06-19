@@ -110,40 +110,28 @@
   <script>
     const channels = [
       {
-        name: 'Local Video',
+        name: 'TV5',
+        logo: 'https://i.imgur.com/Ddyfzrn.png',
+        type: 'mpegdash',
+        manifestUri: 'https://example.co/gj.mpd',
+        clearKey: {
+          '2615129ef2c846a9bhd43a641c7303ef': '07c7f996b1734ea288641a68e1pfdc4d'
+        },
+        category: 'Local'
+      },
+      {
+        name: 'Demo Video',
         logo: 'https://img.icons8.com/ios/50/video-file.png',
         type: 'mp4',
         url: 'XRecorder_19062025_125854.mp4',
         category: 'Local'
       },
       {
-        name: 'TV5',
-        logo: 'https://i.imgur.com/Ddyfzrn.png',
-        type: 'mpegdash',
-        manifestUri: 'https://example.co/gj.mpd',
-        clearKey: { '2615129ef2c846a9bhd43a641c7303ef': '07c7f996b1734ea288641a68e1pfdc4d' },
-        category: 'Local'
-      },
-      {
-        name: 'Live Stream 1',
+        name: 'Live HLS Stream',
         logo: 'https://img.icons8.com/color/48/youtube-live.png',
         type: 'hls',
-        url: 'https://example.com/stream1.m3u8',
+        url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
         category: 'Live'
-      },
-      {
-        name: 'Live Stream 2',
-        logo: 'https://img.icons8.com/color/48/tv.png',
-        type: 'hls',
-        url: 'https://example.com/stream2.m3u8',
-        category: 'Live'
-      },
-      {
-        name: 'Sports Channel',
-        logo: 'https://img.icons8.com/color/48/soccer-ball.png',
-        type: 'hls',
-        url: 'https://example.com/sports.m3u8',
-        category: 'Sports'
       }
     ];
 
@@ -152,20 +140,18 @@
     const searchInput = document.getElementById('searchInput');
     let currentPlayer = null;
 
-    function groupChannels(filteredChannels) {
+    function groupChannels(filtered) {
       const categories = {};
-
-      filteredChannels.forEach(ch => {
+      filtered.forEach(ch => {
         if (!categories[ch.category]) categories[ch.category] = [];
         categories[ch.category].push(ch);
       });
-
       return categories;
     }
 
-    function renderChannels(filteredChannels) {
+    function renderChannels(filtered) {
       groupsContainer.innerHTML = '';
-      const grouped = groupChannels(filteredChannels);
+      const grouped = groupChannels(filtered);
 
       Object.keys(grouped).forEach(cat => {
         const title = document.createElement('div');
@@ -176,10 +162,10 @@
         const ul = document.createElement('ul');
         ul.className = 'channel-list';
 
-        grouped[cat].forEach((ch, idx) => {
+        grouped[cat].forEach((ch) => {
           const li = document.createElement('li');
           li.innerHTML = `<img src="${ch.logo}" alt="logo"><span>${ch.name}</span>`;
-          li.onclick = () => selectChannel(ch);
+          li.onclick = () => selectChannel(ch, li);
           ul.appendChild(li);
         });
 
@@ -187,48 +173,44 @@
       });
     }
 
-    async function selectChannel(ch) {
-      const allItems = document.querySelectorAll('.channel-list li');
-      allItems.forEach(li => li.classList.remove('active'));
-
-      const match = [...allItems].find(li => li.textContent.trim() === ch.name);
-      if (match) match.classList.add('active');
+    async function selectChannel(channel, element) {
+      document.querySelectorAll('.channel-list li').forEach(li => li.classList.remove('active'));
+      element.classList.add('active');
 
       if (currentPlayer) {
-        currentPlayer.unload();
+        await currentPlayer.unload();
         currentPlayer = null;
       }
 
-      if (ch.type === 'hls') {
+      if (channel.type === 'hls') {
         if (Hls.isSupported()) {
           const hls = new Hls();
-          hls.loadSource(ch.url);
+          hls.loadSource(channel.url);
           hls.attachMedia(video);
         } else {
-          video.src = ch.url;
+          video.src = channel.url;
         }
-      } else if (ch.type === 'mp4') {
-        video.src = ch.url;
-      } else if (ch.type === 'mpegdash') {
+      } else if (channel.type === 'mp4') {
+        video.src = channel.url;
+      } else if (channel.type === 'mpegdash') {
         currentPlayer = new shaka.Player(video);
-        if (ch.clearKey) {
+        if (channel.clearKey) {
           currentPlayer.configure({
-            drm: { clearKeys: ch.clearKey }
+            drm: { clearKeys: channel.clearKey }
           });
         }
-        await currentPlayer.load(ch.manifestUri);
+        await currentPlayer.load(channel.manifestUri);
       }
     }
 
     searchInput.addEventListener('input', () => {
-      const searchTerm = searchInput.value.toLowerCase();
-      const filtered = channels.filter(ch => ch.name.toLowerCase().includes(searchTerm));
+      const term = searchInput.value.toLowerCase();
+      const filtered = channels.filter(ch => ch.name.toLowerCase().includes(term));
       renderChannels(filtered);
     });
 
-    // Initial render
     renderChannels(channels);
-    selectChannel(channels[0]);
+    selectChannel(channels[0], document.querySelector('.channel-list li'));
   </script>
 
 </body>
