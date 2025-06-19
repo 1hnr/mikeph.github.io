@@ -83,7 +83,7 @@
       <div id="channelList"></div>
     </div>
     <div id="player">
-      <video id="videoPlayer" controls autoplay></video>
+      <video id="videoPlayer" controls autoplay muted></video>
     </div>
   </div>
 
@@ -795,8 +795,14 @@
       if (shaka.Player.isBrowserSupported()) {
         const player = new shaka.Player(videoPlayer);
         currentPlayer = player;
-        player.configure({ drm: { clearKeys: stream.clearKey } });
-        player.load(stream.manifestUri).then(() => videoPlayer.play());
+        player.configure({
+          drm: {
+            clearKeys: stream.clearKey
+          }
+        });
+        player.load(stream.manifestUri).then(() => {
+          videoPlayer.play().catch(err => console.warn('Autoplay error:', err));
+        });
       } else {
         alert('Shaka Player not supported in this browser.');
       }
@@ -833,7 +839,7 @@
     });
 
     window.addEventListener('DOMContentLoaded', () => {
-      renderStreams(streams);
+      renderStreams(streams); // ✅ Only show the list on load
     });
   </script>
 </body>
