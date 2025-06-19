@@ -1,3 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MPEG-DASH Stream Browser (TV Optimized)</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #fff;
+      overflow: hidden;
+    }
+    header {
+      background: #1e1e1e;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    #content {
+      display: flex;
+      height: calc(100vh - 60px);
+      transition: all 0.3s ease-in-out;
+    }
+    #playlist {
+      width: 300px;
+      background: #1a1a1a;
+      overflow-y: auto;
+      padding: 1rem;
+      border-right: 1px solid #333;
+      transition: transform 0.3s ease;
+    }
+    #player {
+      flex: 1;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .channel {
+      padding: 1.25rem;
+      cursor: pointer;
+      border-bottom: 1px solid #333;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.25rem;
+    }
+    .channel:hover,
+    .channel.focused {
+      background: #444;
+    }
+    .channel.active {
+      background: #555;
+      font-weight: bold;
+    }
+    .channel img {
+      height: 32px;
+      width: 32px;
+      object-fit: contain;
+    }
+    video {
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      border: 2px solid #444;
+      border-radius: 8px;
+      background: #000;
+    }
+    #search {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    .hide-sidebar #playlist {
+      transform: translateX(-100%);
+    }
+    #fullscreenBtn {
+      margin-top: 1rem;
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #fullscreenBtn:hover {
+      background-color: #666;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.10/shaka-player.compiled.js"></script>
+</head>
+<body>
+  <header>MPEG-DASH Stream Browser</header>
+  <div id="content">
+    <div id="playlist">
+      <input type="text" id="search" placeholder="Search channels...">
+      <div id="channelList"></div>
+    </div>
+    <div id="player">
+      <video id="videoPlayer" controls autoplay></video>
+      <button id="fullscreenBtn">⛶ Fullscreen</button>
+    </div>
+  </div>
+
+  <script>
+    const streams = [
       {
         name: 'TV5',
         logo: 'https://i.imgur.com/Ddyfzrn.png',
@@ -677,3 +791,160 @@
         manifestUri: 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/pl_sdi2.mpd',
         clearKey: { '2f3056cac18d4e31a59de39767042b03': '83728946b898141ae411572f9f5fce0d' },
         category: "Local Channel"
+      }
+    ];
+
+    const videoPlayer = document.getElementById('videoPlayer');
+    const searchInput = document.getElementById('search');
+    const playlistDiv = document.getElementById('channelList');
+    const contentDiv = document.getElementById('content');
+    let currentPlayer = null;
+    let currentFocusedIndex = 0;
+    let filteredStreams = streams.slice();
+
+    function clearPlayer() {
+      if (currentPlayer && currentPlayer.destroy) {
+        currentPlayer.destroy();
+        currentPlayer = null;
+      }
+      videoPlayer.pause();
+      videoPlayer.removeAttribute('src');
+      videoPlayer.load();
+    }
+
+    function requestFullscreen(elem) {
+      if (elem.requestFullscreen) elem.requestFullscreen();
+      else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+      else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+    }
+
+    function exitFullscreen() {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      else if (document.msExitFullscreen) document.msExitFullscreen();
+    }
+
+    function playStream(stream) {
+      clearPlayer();
+      document.querySelectorAll('.channel').forEach(c => c.classList.remove('active'));
+      const active = document.querySelector(`.channel[data-name="${stream.name}"]`);
+      if (active) active.classList.add('active');
+
+      if (shaka.Player.isBrowserSupported()) {
+        const player = new shaka.Player(videoPlayer);
+        currentPlayer = player;
+        player.configure({ drm: { clearKeys: stream.clearKey } });
+        player.load(stream.manifestUri).then(() => {
+          videoPlayer.play().catch(err => console.warn('Autoplay error:', err));
+        });
+      } else {
+        alert('Shaka Player not supported in this browser.');
+      }
+
+      // Removed fullscreen activation here
+    }
+
+    function renderStreams(filtered) {
+      playlistDiv.innerHTML = '';
+      const groups = filtered.reduce((acc, stream) => {
+        (acc[stream.category || 'Other'] ||= []).push(stream);
+        return acc;
+      }, {});
+
+      for (const [category, items] of Object.entries(groups)) {
+        const title = document.createElement('h3');
+        title.textContent = category;
+        playlistDiv.appendChild(title);
+
+        items.forEach((stream, index) => {
+          const div = document.createElement('div');
+          div.className = 'channel';
+          div.setAttribute('data-name', stream.name);
+          div.setAttribute('tabindex', '0');
+          div.innerHTML = `${stream.logo ? `<img src="${stream.logo}" alt="">` : ''} ${stream.name}`;
+          div.onclick = () => playStream(stream);
+          playlistDiv.appendChild(div);
+        });
+      }
+
+      focusChannel(0);
+    }
+
+    function focusChannel(index) {
+      const all = document.querySelectorAll('.channel');
+      all.forEach(c => c.classList.remove('focused'));
+      const el = all[index];
+      if (el) {
+        el.classList.add('focused');
+        el.scrollIntoView({ block: 'center' });
+      }
+    }
+
+    searchInput.addEventListener('input', () => {
+      const keyword = searchInput.value.toLowerCase();
+      filteredStreams = streams.filter(s => s.name.toLowerCase().includes(keyword));
+      renderStreams(filteredStreams);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      const total = document.querySelectorAll('.channel').length;
+      if (e.key === 'ArrowDown') {
+        currentFocusedIndex = (currentFocusedIndex + 1) % total;
+        focusChannel(currentFocusedIndex);
+        e.preventDefault();
+      } else if (e.key === 'ArrowUp') {
+        currentFocusedIndex = (currentFocusedIndex - 1 + total) % total;
+        focusChannel(currentFocusedIndex);
+        e.preventDefault();
+      } else if (e.key === 'Enter') {
+        const channel = document.querySelectorAll('.channel')[currentFocusedIndex];
+        if (channel) {
+          const name = channel.getAttribute('data-name');
+          const stream = filteredStreams.find(s => s.name === name);
+          if (stream) playStream(stream);
+        }
+      } else if (e.key === 'Escape' || e.key === 'ArrowLeft' || e.key === 'Backspace' || e.key === 'BrowserBack') {
+        contentDiv.classList.remove('hide-sidebar');
+        exitFullscreen();
+      }
+    });
+
+    // Swipe gesture support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function handleSwipeGesture() {
+      const swipeDistance = touchEndX - touchStartX;
+      if (swipeDistance > 80) {
+        contentDiv.classList.remove('hide-sidebar');
+        exitFullscreen();
+      } else if (swipeDistance < -80) {
+        contentDiv.classList.add('hide-sidebar');
+        requestFullscreen(videoPlayer);
+      }
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipeGesture();
+    });
+
+    // Fullscreen button logic
+    document.getElementById('fullscreenBtn').addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        requestFullscreen(videoPlayer);
+      } else {
+        exitFullscreen();
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderStreams(streams);
+    });
+  </script>
+</body>
+</html>
