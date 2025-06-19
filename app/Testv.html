@@ -64,13 +64,24 @@
       border-radius: 8px;
       background: #000;
     }
+    #search {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.10/shaka-player.compiled.js"></script>
 </head>
 <body>
   <header>Stream Browser</header>
   <div id="content">
-    <div id="playlist"></div>
+    <div id="playlist">
+      <input type="text" id="search" placeholder="Search channels...">
+      <div id="channelList"></div>
+    </div>
     <div id="player">
       <video id="videoPlayer" controls autoplay style="display:none;"></video>
       <iframe id="ytPlayer" frameborder="0" allowfullscreen style="display:none;"></iframe>
@@ -810,13 +821,24 @@ name: 'Net 25',
       }
     ];
 
-    const playlistDiv = document.getElementById('playlist');
+    const searchInput = document.getElementById('search');
+    const playlistDiv = document.getElementById('channelList');
     const videoPlayer = document.getElementById('videoPlayer');
     const ytPlayer = document.getElementById('ytPlayer');
 
+    let currentPlayer = null;
+
     function clearPlayer() {
+      if (currentPlayer && currentPlayer.destroy) {
+        currentPlayer.destroy();
+        currentPlayer = null;
+      }
       videoPlayer.pause();
+      videoPlayer.removeAttribute('src');
+      videoPlayer.load();
       videoPlayer.style.display = 'none';
+
+      ytPlayer.src = '';
       ytPlayer.style.display = 'none';
     }
 
@@ -838,12 +860,9 @@ name: 'Net 25',
         videoPlayer.style.display = 'block';
         if (shaka.Player.isBrowserSupported()) {
           const player = new shaka.Player(videoPlayer);
+          currentPlayer = player;
           const config = stream.clearKey
-            ? {
-                drm: {
-                  clearKeys: stream.clearKey
-                }
-              }
+            ? { drm: { clearKeys: stream.clearKey } }
             : {};
           player.configure(config);
           player.load(stream.manifestUri).then(() => videoPlayer.play());
@@ -853,8 +872,8 @@ name: 'Net 25',
       }
     }
 
-    function showStreams(streams) {
-      const groups = streams.reduce((acc, stream) => {
+    function renderStreams(filteredStreams) {
+      const groups = filteredStreams.reduce((acc, stream) => {
         (acc[stream.category || 'Other'] ||= []).push(stream);
         return acc;
       }, {});
@@ -877,8 +896,14 @@ name: 'Net 25',
       }
     }
 
+    searchInput.addEventListener('input', () => {
+      const keyword = searchInput.value.toLowerCase();
+      const filtered = streams.filter(s => s.name.toLowerCase().includes(keyword));
+      renderStreams(filtered);
+    });
+
     window.addEventListener('DOMContentLoaded', () => {
-      showStreams(streams);
+      renderStreams(streams);
     });
   </script>
 </body>
