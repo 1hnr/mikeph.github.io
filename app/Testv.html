@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Stream Browser</title>
+  <title>MPEG-DASH Stream Browser</title>
   <style>
     body {
       margin: 0;
@@ -56,7 +56,7 @@
       width: 24px;
       object-fit: contain;
     }
-    video, iframe {
+    video {
       width: 100%;
       max-width: 800px;
       height: 450px;
@@ -76,15 +76,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.10/shaka-player.compiled.js"></script>
 </head>
 <body>
-  <header>Stream Browser</header>
+  <header>MPEG-DASH Stream Browser</header>
   <div id="content">
     <div id="playlist">
       <input type="text" id="search" placeholder="Search channels...">
       <div id="channelList"></div>
     </div>
     <div id="player">
-      <video id="videoPlayer" controls autoplay style="display:none;"></video>
-      <iframe id="ytPlayer" frameborder="0" allowfullscreen style="display:none;"></iframe>
+      <video id="videoPlayer" controls autoplay></video>
     </div>
   </div>
 
@@ -163,13 +162,6 @@
         category: "Movies"
       },
                      {
-        name: 'Jungo Pinoy TV',
-        logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQS_UgFhePKGiIVSCN_LYWF5YdublD4GN-OYVNJApS8lxw1afFgyz6Jmq4&s=10',
-        type: 'hls',
-        manifestUri: 'https://jungotvstream.chanall.tv/jungotv/jungopinoytv/stream.m3u8',
-        category: "Movies"
-      },
-      {
         name: 'ANC',
         logo: 'https://i.imgur.com/Bcu69bU.png',
         type: 'mpegdash',
@@ -218,13 +210,6 @@
         category: "Kids"
       },
                          {
-        name: 'PBS Kids',
-        logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/PBS_Kids_logo_%282022%29.svg/1200px-PBS_Kids_logo_%282022%29.svg.png',
-        type: 'hls',
-        manifestUri: 'https://2-fss-2.streamhoster.com/pl_140/amlst:200914-1298290/chunklist_b2000000.m3u8',
-        category: "Kids"
-      },
-{
         name: 'Moonbug Kids',
         logo: 'https://i.imgur.com/H5Ha3ll.png',
         type: 'mpegdash',
@@ -769,63 +754,26 @@
         category: "News"
       },
 {
-name: 'GMA TV',
-        manifestUri: 'https://gma.fflame143.workers.dev/master.m3u8',
-        type: 'hls',
-		logo: 'https://i.imgur.com/yh8g68M.png',
-	        category: "Local"
-      },
-{
-name: 'GTV',
-        manifestUri: 'https://gtv.fflame143.workers.dev/master.m3u8',
-        type: 'hls',
-		logo: 'https://i.imgur.com/PsyP7Ga.jpeg',
-	        category: "Local"
-      },
-{
-name: 'GTV',
-        manifestUri: 'https://alltv.fflame143.workers.dev/master.m3u8',
-        type: 'hls',
-		logo: 'https://i.imgur.com/YRA5Vz4.jpeg',
-	        category: "Local"
-      },
-{
-name: 'Net 25',
-        manifestUri: 'https://net25.fflame143.workers.dev/master.m3u8',
-        type: 'hls',
-		logo: 'https://i.imgur.com/2pRBUrH.png',
-	        category: "Local"                
-	      },
-  {
-        name: 'HallyPop',
-        logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/GMA_Hallypop_logo.png',
-        type: 'hls',
-        manifestUri: 'https://jungotvstream.chanall.tv/jungotv/hallypop/stream.m3u8',
-        category: "Local"
-      },
-{
-        name: 'Pilipinas Live 1',
+        name: 'PILIPINAS LIVE 1',
         logo: 'https://pilipinaslive.com/assets/images/logo/pilipinaslive-logo-wbg.png',
         type: 'mpegdash',
         manifestUri: 'https://qp-pldt-live-grp-08-prod.akamaized.net/out/u/pl_sdi1.mpd',
         clearKey: { 'a913faeecaac4813a55240bea0c68858': '05b7d7eaba8d6410dbe234336d9b235a' },
-        category: "Pilipinas Live"
+        category: "Local Channel"
 	      },
 {
-        name: 'Pilipinas Live 2',
+        name: 'PILIPINAS LIVE 2',
         logo: 'https://pilipinaslive.com/assets/images/logo/pilipinaslive-logo-wbg.png',
         type: 'mpegdash',
         manifestUri: 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/pl_sdi2.mpd',
         clearKey: { '2f3056cac18d4e31a59de39767042b03': '83728946b898141ae411572f9f5fce0d' },
-        category: "Pilipinas Live"
+        category: "Local Channel"
       }
     ];
 
+    const videoPlayer = document.getElementById('videoPlayer');
     const searchInput = document.getElementById('search');
     const playlistDiv = document.getElementById('channelList');
-    const videoPlayer = document.getElementById('videoPlayer');
-    const ytPlayer = document.getElementById('ytPlayer');
-
     let currentPlayer = null;
 
     function clearPlayer() {
@@ -836,10 +784,6 @@ name: 'Net 25',
       videoPlayer.pause();
       videoPlayer.removeAttribute('src');
       videoPlayer.load();
-      videoPlayer.style.display = 'none';
-
-      ytPlayer.src = '';
-      ytPlayer.style.display = 'none';
     }
 
     function playStream(stream) {
@@ -848,41 +792,27 @@ name: 'Net 25',
       const active = document.querySelector(`.channel[data-name="${stream.name}"]`);
       if (active) active.classList.add('active');
 
-      if (stream.type === 'youtube') {
-        ytPlayer.src = stream.embedUrl;
-        ytPlayer.style.display = 'block';
-      } else if (stream.type === 'hls') {
-        videoPlayer.innerHTML = `<source src="${stream.manifestUri}" type="application/x-mpegURL">`;
-        videoPlayer.style.display = 'block';
-        videoPlayer.load();
-        videoPlayer.play();
-      } else if (stream.type === 'mpegdash') {
-        videoPlayer.style.display = 'block';
-        if (shaka.Player.isBrowserSupported()) {
-          const player = new shaka.Player(videoPlayer);
-          currentPlayer = player;
-          const config = stream.clearKey
-            ? { drm: { clearKeys: stream.clearKey } }
-            : {};
-          player.configure(config);
-          player.load(stream.manifestUri).then(() => videoPlayer.play());
-        } else {
-          alert('Shaka Player is not supported in this browser.');
-        }
+      if (shaka.Player.isBrowserSupported()) {
+        const player = new shaka.Player(videoPlayer);
+        currentPlayer = player;
+        player.configure({ drm: { clearKeys: stream.clearKey } });
+        player.load(stream.manifestUri).then(() => videoPlayer.play());
+      } else {
+        alert('Shaka Player not supported in this browser.');
       }
     }
 
-    function renderStreams(filteredStreams) {
-      const groups = filteredStreams.reduce((acc, stream) => {
+    function renderStreams(filtered) {
+      const groups = filtered.reduce((acc, stream) => {
         (acc[stream.category || 'Other'] ||= []).push(stream);
         return acc;
       }, {});
 
       playlistDiv.innerHTML = '';
 
-      for (const [group, items] of Object.entries(groups)) {
+      for (const [category, items] of Object.entries(groups)) {
         const title = document.createElement('h3');
-        title.textContent = group;
+        title.textContent = category;
         playlistDiv.appendChild(title);
 
         items.forEach(stream => {
