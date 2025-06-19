@@ -92,7 +92,7 @@
       <div id="channelList"></div>
     </div>
     <div id="player">
-      <video id="videoPlayer" controls autoplay></video>
+    <video id="videoPlayer" controls autoplay muted></video>
     </div>
   </div>
 
@@ -820,22 +820,46 @@
       else if (document.msExitFullscreen) document.msExitFullscreen();
     }
 
-    function playStream(stream) {
-      clearPlayer();
-      document.querySelectorAll('.channel').forEach(c => c.classList.remove('active'));
-      const active = document.querySelector(`.channel[data-name="${stream.name}"]`);
-      if (active) active.classList.add('active');
+async function playStream(stream) {
+  // Prevent multiple clicks while loading
+  if (window.isLoadingStream) return;
+  window.isLoadingStream = true;
 
-      if (shaka.Player.isBrowserSupported()) {
-        const player = new shaka.Player(videoPlayer);
-        currentPlayer = player;
-        player.configure({ drm: { clearKeys: stream.clearKey } });
-        player.load(stream.manifestUri).then(() => {
-          videoPlayer.play().catch(err => console.warn('Autoplay error:', err));
-        });
-      } else {
-        alert('Shaka Player not supported in this browser.');
-      }
+  clearPlayer();
+
+  document.querySelectorAll('.channel').forEach(c => c.classList.remove('active'));
+  const active = document.querySelector(`.channel[data-name="${stream.name}"]`);
+  if (active) active.classList.add('active');
+
+  if (!shaka.Player.isBrowserSupported()) {
+    alert('Shaka Player not supported in this browser.');
+    window.isLoadingStream = false;
+    return;
+  }
+
+  try {
+    const player = new shaka.Player(videoPlayer);
+    currentPlayer = player;
+
+    if (stream.clearKey) {
+      player.configure({
+        drm: {
+          clearKeys: stream.clearKey
+        }
+      });
+    }
+
+    await player.load(stream.manifestUri);
+    await videoPlayer.play().catch(err => {
+      console.warn('Autoplay blocked:', err.message);
+    });
+  } catch (error) {
+    console.error('Error loading stream:', error);
+    alert('Failed to load stream.');
+  } finally {
+    window.isLoadingStream = false;
+  }
+}
 
       hideSidebarAndFullscreen();
     }
