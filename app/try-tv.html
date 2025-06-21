@@ -814,6 +814,8 @@
       videoPlayer.pause();
       videoPlayer.removeAttribute('src');
       videoPlayer.load();
+      videoPlayer.classList.add('hidden');
+      fullscreenBtn.classList.add('hidden');
     }
 
     function requestFullscreen(elem) {
@@ -839,7 +841,14 @@
         currentPlayer = player;
         player.configure({ drm: { clearKeys: stream.clearKey } });
         player.load(stream.manifestUri).then(() => {
-          videoPlayer.play().catch(err => console.warn('Autoplay error:', err));
+          videoPlayer.play().then(() => {
+            // Success: handled by 'play' event
+          }).catch(err => {
+            console.warn('Autoplay error:', err);
+            // Fallback: show manually
+            videoPlayer.classList.remove('hidden');
+            fullscreenBtn.classList.remove('hidden');
+          });
         });
       } else {
         alert('Shaka Player not supported in this browser.');
@@ -911,7 +920,6 @@
       }
     });
 
-    // Swipe gesture support
     let touchStartX = 0;
     let touchEndX = 0;
 
@@ -935,7 +943,6 @@
       handleSwipeGesture();
     });
 
-    // Fullscreen button logic
     fullscreenBtn.addEventListener('click', () => {
       if (!document.fullscreenElement) {
         requestFullscreen(videoPlayer);
@@ -944,7 +951,6 @@
       }
     });
 
-    // Show/hide player elements based on playback
     videoPlayer.addEventListener('play', () => {
       videoPlayer.classList.remove('hidden');
       fullscreenBtn.classList.remove('hidden');
@@ -960,6 +966,14 @@
     videoPlayer.addEventListener('ended', () => {
       videoPlayer.classList.add('hidden');
       fullscreenBtn.classList.add('hidden');
+    });
+
+    // Extra: show video if it becomes playable but autoplay is blocked
+    videoPlayer.addEventListener('canplay', () => {
+      if (!videoPlayer.paused) {
+        videoPlayer.classList.remove('hidden');
+        fullscreenBtn.classList.remove('hidden');
+      }
     });
 
     window.addEventListener('DOMContentLoaded', () => {
