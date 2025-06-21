@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <title>VIVAMAX</title>
+
+  <!-- HLS.js and Shaka Player -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/shaka-player@latest/dist/shaka-player.compiled.js"></script>
+
   <style>
     :root {
       --primary: #00aaff;
@@ -117,10 +122,6 @@
       height: 90vh;
       border-radius: 1rem;
       background-color: black;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
     }
 
     #closeBtn {
@@ -155,8 +156,6 @@
       }
     }
   </style>
-
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
 
@@ -166,11 +165,10 @@
 
   <input type="hidden" id="m3uUrl" value="https://opop.pro/gQqmzTUxw3B1" />
   <input type="text" id="searchBar" placeholder="Search..." />
-
   <div id="channelSections"></div>
 
   <div id="videoContainer">
-    <button id="closeBtn" onclick="closeVideo()"> Close</button>
+    <button id="closeBtn" onclick="closeVideo()">Close</button>
     <video id="videoPlayer" controls autoplay playsinline controlsList="nodownload"></video>
   </div>
 
@@ -191,12 +189,10 @@
             const titleMatch = lines[i].match(/,(.*)/);
             const logoMatch = lines[i].match(/tvg-logo="(.*?)"/);
             const groupMatch = lines[i].match(/group-title="(.*?)"/);
-
             const title = titleMatch ? titleMatch[1].trim() : "Untitled";
             const logo = logoMatch ? logoMatch[1] : "";
             const group = groupMatch ? groupMatch[1].trim() : "Other";
             const streamUrl = lines[i + 1]?.trim();
-
             if (streamUrl && streamUrl.startsWith("http")) {
               allChannels.push({ title, logo, streamUrl, group });
             }
@@ -257,11 +253,6 @@
         section.appendChild(scroll);
         container.appendChild(section);
       });
-
-      setTimeout(() => {
-        const firstCard = document.querySelector(".card-item");
-        if (firstCard) firstCard.focus();
-      }, 300);
     }
 
     function playChannel(url) {
@@ -272,15 +263,14 @@
       video.innerHTML = "";
       container.style.display = "flex";
 
-      const isHLS = url.endsWith(".m3u8");
-      const isMP4 = url.endsWith(".mp4");
-
-      if (isHLS) {
+      if (url.includes(".mpd") || url.includes("license")) {
+        loadDRMVideo(url, video);
+      } else if (url.endsWith(".m3u8")) {
         if (Hls.isSupported()) {
           const hls = new Hls();
           hls.loadSource(url);
           hls.attachMedia(video);
-          hls.on(Hls.Events.MANIFEST_PARSED, function () {
+          hls.on(Hls.Events.MANIFEST_PARSED, () => {
             video.play().catch(console.error);
           });
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
@@ -289,9 +279,9 @@
             video.play().catch(console.error);
           });
         } else {
-          alert("This device does not support HLS playback.");
+          alert("This device does not support HLS.");
         }
-      } else if (isMP4) {
+      } else if (url.endsWith(".mp4")) {
         video.src = url;
         video.load();
         video.play().catch(console.error);
@@ -304,10 +294,34 @@
       }
     }
 
+    async function loadDRMVideo(manifestUrl, videoElement) {
+      if (!shaka.Player.isBrowserSupported()) {
+        alert("Shaka Player is not supported in this browser.");
+        return;
+      }
+
+      const player = new shaka.Player(videoElement);
+      player.configure({
+        drm: {
+          servers: {
+            'com.widevine.alpha': 'https://your-license-server.com/widevine',
+            'com.microsoft.playready': 'https://your-license-server.com/playready'
+          }
+        }
+      });
+
+      try {
+        await player.load(manifestUrl);
+        videoElement.play().catch(console.error);
+      } catch (e) {
+        console.error("DRM playback error", e);
+        alert("DRM content failed to play.");
+      }
+    }
+
     function closeVideo() {
       const container = document.getElementById("videoContainer");
       const video = document.getElementById("videoPlayer");
-
       video.pause();
       video.innerHTML = "";
       container.style.display = "none";
@@ -317,57 +331,6 @@
       const query = this.value.toLowerCase();
       filteredChannels = allChannels.filter(ch => ch.title.toLowerCase().includes(query));
       renderSections(groupChannels(filteredChannels));
-    });
-
-    document.addEventListener('keydown', (e) => {
-      const focused = document.activeElement;
-      const cards = Array.from(document.querySelectorAll('.card-item'));
-      if (!cards.length) return;
-
-      let index = cards.indexOf(focused);
-      switch (e.key) {
-        case 'ArrowRight':
-          if (index >= 0 && index < cards.length - 1) cards[index + 1].focus();
-          break;
-        case 'ArrowLeft':
-          if (index > 0) cards[index - 1].focus();
-          break;
-        case 'ArrowDown':
-          moveToSection(cards, index, 1);
-          break;
-        case 'ArrowUp':
-          moveToSection(cards, index, -1);
-          break;
-        case 'Enter':
-          if (focused && focused.dataset.url) playChannel(focused.dataset.url);
-          break;
-      }
-    });
-
-    function moveToSection(cards, index, direction) {
-      const currentCard = cards[index];
-      if (!currentCard) return;
-
-      const currentSection = currentCard.closest('.section');
-      const allSections = Array.from(document.querySelectorAll('.section'));
-      const currentIndex = allSections.indexOf(currentSection);
-      const targetSection = allSections[currentIndex + direction];
-
-      if (targetSection) {
-        const targetCard = targetSection.querySelector('.card-item');
-        if (targetCard) targetCard.focus();
-      }
-    }
-
-    if (navigator.userAgent.includes("TV")) {
-      document.getElementById("searchBar").style.display = "none";
-    }
-
-    // Prevent right-click download on video
-    document.addEventListener('contextmenu', event => {
-      if (event.target.tagName === 'VIDEO') {
-        event.preventDefault();
-      }
     });
 
     window.onload = loadM3U;
