@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PHILIPPINES</title>
+  <title>HONOR TV</title>
   <style>
     body {
       margin: 0;
@@ -12,7 +12,6 @@
       background-color: #121212;
       color: #fff;
       overflow: hidden;
-      font-size: 1rem;
     }
     header {
       background: #1e1e1e;
@@ -22,31 +21,16 @@
     }
     #content {
       display: flex;
-      flex-direction: column;
       height: calc(100vh - 60px);
       transition: all 0.3s ease-in-out;
     }
-    @media (min-width: 768px) {
-      #content {
-        flex-direction: row;
-      }
-    }
     #playlist {
-      width: 100%;
-      max-height: 50vh;
+      width: 300px;
       background: #1a1a1a;
       overflow-y: auto;
       padding: 1rem;
-      border-bottom: 1px solid #333;
+      border-right: 1px solid #333;
       transition: transform 0.3s ease;
-    }
-    @media (min-width: 768px) {
-      #playlist {
-        width: 300px;
-        max-height: none;
-        border-right: 1px solid #333;
-        border-bottom: none;
-      }
     }
     #player {
       flex: 1;
@@ -64,7 +48,6 @@
       align-items: center;
       gap: 12px;
       font-size: 1.25rem;
-      outline: none;
     }
     .channel:hover,
     .channel.focused {
@@ -79,11 +62,10 @@
       width: 32px;
       object-fit: contain;
     }
-    video, iframe {
+    video {
       width: 100%;
       max-width: 100%;
       height: 100%;
-      max-height: 60vh;
       border: 2px solid #444;
       border-radius: 8px;
       background: #000;
@@ -95,6 +77,9 @@
       border: none;
       border-radius: 4px;
       font-size: 1rem;
+    }
+    .hide-sidebar #playlist {
+      transform: translateX(-100%);
     }
     #fullscreenBtn {
       margin-top: 1rem;
@@ -112,32 +97,11 @@
     .hidden {
       display: none;
     }
-    @media (min-width: 1280px) {
-      .channel {
-        font-size: 1.5rem;
-        padding: 1.5rem;
-      }
-      #search {
-        font-size: 1.2rem;
-        padding: 1rem;
-        display: none;
-      }
-      #fullscreenBtn {
-        font-size: 1.2rem;
-        padding: 1rem 2rem;
-      }
-      body {
-        font-size: 1.3rem;
-      }
-      video, iframe {
-        max-height: 90vh;
-      }
-    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.10/shaka-player.compiled.js"></script>
 </head>
 <body>
-  <header>PHILIPPINES</header>
+  <header>HONOR TV</header>
   <div id="content">
     <div id="playlist">
       <input type="text" id="search" placeholder="Search channels...">
@@ -145,7 +109,6 @@
     </div>
     <div id="player">
       <video id="videoPlayer" class="hidden" controls autoplay></video>
-      <iframe id="youtubePlayer" class="hidden" allowfullscreen></iframe>
       <button id="fullscreenBtn" class="hidden">⛶ Fullscreen</button>
     </div>
   </div>
@@ -167,13 +130,6 @@
         manifestUri: 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/cg_a2z.mpd',
         clearKey: { 'f703e4c8ec9041eeb5028ab4248fa094': 'c22f2162e176eee6273a5d0b68d19530' },
         category: "Local"
-      },
-      {
-        name: 'GMA',
-        logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/c/c0/GMA_Network_Logo_Vector.svg/1200px-GMA_Network_Logo_Vector.svg.png',
-        type: 'youtube',
-        manifestUri: 'https://www.youtube.com/live/nFTV7SlLXPc?si=xFpJNrKy5gyM4nFW',
-        category: 'Local'
       },
       {
         name: 'GMA Pinoy TV',
@@ -342,13 +298,6 @@
         manifestUri: 'https://qp-pldt-live-grp-01-prod.akamaized.net/out/u/cg_cinemax.mpd',
         clearKey: { 'b207c44332844523a3a3b0469e5652d7': 'fe71aea346db08f8c6fbf0592209f955' },
         category: "Movies"
-      },
-      {
-        name: 'Action Hollywood Movies',
-        logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw1zW8RLLNCQm6UHcIIJZlscOB5vhs7BF2I7SfTthYGv3LtHeRSut2-Ag&s=10',
-        type: 'hls',
-        manifestUri: 'https://amg01076-lightningintern-actionhollywood-samsungnz-82rry.amagi.tv/playlist/amg01076-lightningintern-actionhollywood-samsungnz/playlist.m3u8',
-        category: 'Movies'
       },
 {
         name: 'Hits Now',
@@ -845,15 +794,14 @@
         manifestUri: 'https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/pl_sdi2.mpd',
         clearKey: { '2f3056cac18d4e31a59de39767042b03': '83728946b898141ae411572f9f5fce0d' },
         category: "Local Channel"
-
       }
     ];
 
     const videoPlayer = document.getElementById('videoPlayer');
-    const youtubePlayer = document.getElementById('youtubePlayer');
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     const searchInput = document.getElementById('search');
     const playlistDiv = document.getElementById('channelList');
+    const contentDiv = document.getElementById('content');
     let currentPlayer = null;
     let currentFocusedIndex = 0;
     let filteredStreams = streams.slice();
@@ -867,7 +815,6 @@
       videoPlayer.removeAttribute('src');
       videoPlayer.load();
       videoPlayer.classList.add('hidden');
-      youtubePlayer.classList.add('hidden');
       fullscreenBtn.classList.add('hidden');
     }
 
@@ -889,28 +836,22 @@
       const active = document.querySelector(`.channel[data-name="${stream.name}"]`);
       if (active) active.classList.add('active');
 
-      if (stream.type === 'mpegdash') {
-        if (shaka.Player.isBrowserSupported()) {
-          const player = new shaka.Player(videoPlayer);
-          currentPlayer = player;
-          player.configure({ drm: { clearKeys: stream.clearKey || {} } });
-          player.load(stream.manifestUri).then(() => {
+      if (shaka.Player.isBrowserSupported()) {
+        const player = new shaka.Player(videoPlayer);
+        currentPlayer = player;
+        player.configure({ drm: { clearKeys: stream.clearKey } });
+        player.load(stream.manifestUri).then(() => {
+          videoPlayer.play().then(() => {
+            // Success: handled by 'play' event
+          }).catch(err => {
+            console.warn('Autoplay error:', err);
+            // Fallback: show manually
             videoPlayer.classList.remove('hidden');
             fullscreenBtn.classList.remove('hidden');
-            videoPlayer.play().catch(() => {});
           });
-        } else {
-          alert('Shaka Player not supported in this browser.');
-        }
-      } else if (stream.type === 'hls') {
-        videoPlayer.src = stream.manifestUri;
-        videoPlayer.classList.remove('hidden');
-        fullscreenBtn.classList.remove('hidden');
-        videoPlayer.play().catch(() => {});
-      } else if (stream.type === 'youtube') {
-        youtubePlayer.src = stream.manifestUri;
-        youtubePlayer.classList.remove('hidden');
-        fullscreenBtn.classList.remove('hidden');
+        });
+      } else {
+        alert('Shaka Player not supported in this browser.');
       }
     }
 
@@ -920,10 +861,12 @@
         (acc[stream.category || 'Other'] ||= []).push(stream);
         return acc;
       }, {});
+
       for (const [category, items] of Object.entries(groups)) {
         const title = document.createElement('h3');
         title.textContent = category;
         playlistDiv.appendChild(title);
+
         items.forEach((stream, index) => {
           const div = document.createElement('div');
           div.className = 'channel';
@@ -934,8 +877,8 @@
           playlistDiv.appendChild(div);
         });
       }
+
       focusChannel(0);
-      document.querySelector('.channel')?.focus();
     }
 
     function focusChannel(index) {
@@ -944,7 +887,6 @@
       const el = all[index];
       if (el) {
         el.classList.add('focused');
-        el.focus();
         el.scrollIntoView({ block: 'center' });
       }
     }
@@ -956,8 +898,7 @@
     });
 
     document.addEventListener('keydown', (e) => {
-      const all = document.querySelectorAll('.channel');
-      const total = all.length;
+      const total = document.querySelectorAll('.channel').length;
       if (e.key === 'ArrowDown') {
         currentFocusedIndex = (currentFocusedIndex + 1) % total;
         focusChannel(currentFocusedIndex);
@@ -967,29 +908,76 @@
         focusChannel(currentFocusedIndex);
         e.preventDefault();
       } else if (e.key === 'Enter') {
-        const channel = all[currentFocusedIndex];
+        const channel = document.querySelectorAll('.channel')[currentFocusedIndex];
         if (channel) {
           const name = channel.getAttribute('data-name');
           const stream = filteredStreams.find(s => s.name === name);
           if (stream) playStream(stream);
         }
-      } else if (e.key === 'Escape' || e.key === 'Backspace') {
+      } else if (e.key === 'Escape' || e.key === 'ArrowLeft' || e.key === 'Backspace' || e.key === 'BrowserBack') {
+        contentDiv.classList.remove('hide-sidebar');
         exitFullscreen();
       }
     });
 
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function handleSwipeGesture() {
+      const swipeDistance = touchEndX - touchStartX;
+      if (swipeDistance > 80) {
+        contentDiv.classList.remove('hide-sidebar');
+        exitFullscreen();
+      } else if (swipeDistance < -80) {
+        contentDiv.classList.add('hide-sidebar');
+        requestFullscreen(videoPlayer);
+      }
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipeGesture();
+    });
+
     fullscreenBtn.addEventListener('click', () => {
       if (!document.fullscreenElement) {
-        requestFullscreen(document.getElementById('player'));
+        requestFullscreen(videoPlayer);
       } else {
         exitFullscreen();
       }
     });
 
+    videoPlayer.addEventListener('play', () => {
+      videoPlayer.classList.remove('hidden');
+      fullscreenBtn.classList.remove('hidden');
+    });
+
+    videoPlayer.addEventListener('pause', () => {
+      if (videoPlayer.currentTime === 0 || videoPlayer.ended) {
+        videoPlayer.classList.add('hidden');
+        fullscreenBtn.classList.add('hidden');
+      }
+    });
+
+    videoPlayer.addEventListener('ended', () => {
+      videoPlayer.classList.add('hidden');
+      fullscreenBtn.classList.add('hidden');
+    });
+
+    // Extra: show video if it becomes playable but autoplay is blocked
+    videoPlayer.addEventListener('canplay', () => {
+      if (!videoPlayer.paused) {
+        videoPlayer.classList.remove('hidden');
+        fullscreenBtn.classList.remove('hidden');
+      }
+    });
+
     window.addEventListener('DOMContentLoaded', () => {
       renderStreams(streams);
-      // Uncomment to auto-play first stream:
-      // playStream(streams[0]);
     });
   </script>
 </body>
