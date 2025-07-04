@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IPTV DASH Player</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      margin-left: 20px;
+      color: #ffcc00;
+    }
+
+    .horizontal-scroll {
+      display: flex;
+      overflow-x: auto;
+      padding: 10px 20px;
+      gap: 10px;
+    }
+
+    .card-item {
+      width: 150px;
+      flex-shrink: 0;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      overflow: hidden;
+      outline: none;
+      background: #222;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card-item:focus {
+      border-color: #ffcc00;
+      transform: scale(1.05);
+    }
+
+    .card-item img {
+      width: 100%;
+      height: 225px;
+      object-fit: cover;
+    }
+
+    .card-item p {
+      margin: 5px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    #searchBar {
+      width: calc(100% - 40px);
+      margin: 20px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+    }
+
+    #videoContainer {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      flex-direction: column;
+    }
+
+    #videoPlayer {
+      width: 80%;
+      max-height: 80%;
+      background: #000;
+    }
+
+    #closeBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #ff4444;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.3.5/dist/shaka-player.compiled.js"></script>
+</head>
+<body>
+
+  <input type="text" id="searchBar" placeholder="Search channels..." />
+
+  <div id="channelSections"></div>
+
+  <div id="videoContainer">
+    <video id="videoPlayer" controls autoplay></video>
+    <button id="closeBtn" onclick="closeVideo()">Close</button>
+  </div>
+
+  <script>
+    const staticChannels = [
+  {
+    "name": "Lizzo: Live In Concert 2022",
+    "logo": "https://dai3fd1oh325y.cloudfront.net/images/480p/039482X0-portrait.jpg",
+    "type": "dash",
+    "manifestUri": "https://hbogoprod-vod.akamaized.net/video/vod/output/HBOAsia/64321e38d940521074cdccb7_hbovodhd/dash0/IDN_DOLBY_index.mpd",
+    "clearKey": "462b8f16d670a1c1960f3192878c27d1:1d717d6394c6b7df61df8cebf76f010d",
+    "category": "🎬 HBOGO ASIA 2022"
+  },
+  {
+    "name": "Puss In Boots: The Last Wish 2022",
+    "logo": "https://dai3fd1oh325y.cloudfront.net/images/480p/040408X0-portrait.jpg",
+    "type": "dash",
+    "manifestUri": "https://hbogoprod-vod.akamaized.net/video/vod/output/HBOAsia/64aa5d9fd940521074d9106a_hbovodhd/dash0/IDN_DOLBY_index.mpd",
+    "clearKey": "153abc2316da6cbad563da3385fb52a4:d2c1e189ec43fd5bb8ce047a10847fde",
+    "category": "🎬 HBOGO ASIA 2022"
+  },
+  {
+    "name": "Tom And Jerry: Snowman's Land 2022",
+    "logo": "https://dai3fd1oh325y.cloudfront.net/images/480p/040194X0-portrait.jpg",
+    "type": "dash",
+    "manifestUri": "https://hbogoprod-vod.akamaized.net/video/vod/output/HBOAsia/6455beb3d940521074d12528_hbovodhd/dash0/IDN_DOLBY_index.mpd",
+    "clearKey": "c147967dee0910abb50cd6e4f7475f5e:28f4f1307372b4ff53ff4b9f91ce3951",
+    "category": "🎬 HBOGO ASIA 2022"
+  },
+  {
+    "name": "Love, Lizzo 2022",
+    "logo": "https://dai3fd1oh325y.cloudfront.net/images/480p/039450X0-portrait.jpg",
+    "type": "dash",
+    "manifestUri": "https://hbogoprod-vod.akamaized.net/video/vod/output/HBOAsia/64321955d940521074cdcc2e_hbovodhd/dash0/IDN_DOLBY_index.mpd",
+    "clearKey": "a5ea58414fa6fea36decd84393760eb1:70c145eb82725108e9e1f6f5526364e9",
+    "category": "🎬 HBOGO ASIA 2022"
+  },
+  {
+    "name": "The Fabelmans 2022",
+    "logo": "https://dai3fd1oh325y.cloudfront.net/images/480p/040515X0-portrait.jpg",
+    "type": "dash",
+    "manifestUri": "https://hbogoprod-vod.akamaized.net/video/vod/output/HBOAsia/64c37444d940521074db6dc6_hbovodhd/dash0/IDN_DOLBY_index.mpd",
+    "clearKey": "c16c1647d9406ce13c1bc1fbbc1282ab:2a1edcd261957c85236cd360b66b83b9",
+    "category": "🎬 HBOGO ASIA 2022"
+  },
+  {
+    "name": "The Travelog: Hyoyeon & Sunny In Qatar 2022",
+    "logo": "https://dai3fd1oh325y.cloudfront.net/images/480p/039274X0-portrait.jpg",
+    "type": "dash",
+    "manifestUri": "https://hbogoprod-vod.akamaized.net/video/vod/output/HBOAsia/63914ccad940521074beb2da_hbovodhd/dash0/IDN_index.mpd",
+    "clearKey": "6dff3ee35cef9345eae7daf245f15b00:5dc68edcafb7a7d492b2562489e9327d",
+    "category": "🎬 HBOGO ASIA 2022"
+  },
+  {
+    "name": "She Said 2022",
+    "logo": "https://dai3fd1oh325y.cloudfront.net/images/480p/040406X0-portrait.jpg",
+    "type": "dash",
+    "manifestUri": "https://hbogoprod-vod.akamaized.net/video/vod/output/HBOAsia/64fb2e8bd940521074e0a73f_hbovodhd/dash0/IDN_DOLBY_index.mpd",
+    "clearKey": "7bbeda64587b2bdd5393e1187c53b4b1:b748f3c8ecaea6a47385211df7e37b6e",
+    "category": "🎬 HBOGO ASIA 2022"
+  },
+  {
+    "name": "Crawlspace 2022",
+    "logo": "https://dai3fd1oh325y.cloudfront.net/images/480p/040234X0-portrait.jpg",
+    "type": "dash",
+    "manifestUri": "https://hbogoprod-vod.akamaized.net/video/vod/output/HBOAsia/6482be0ad940521074d55b26_hbovodhd/dash0/IDN_DOLBY_index.mpd",
+    "clearKey"::c4620ddeecc75f5218bc75dc57c5ffbe:f6525e7056eebde27b4e99cd88c83b0b",
+    "category": "🎬 HBOGO ASIA 2022"
+  },
+  {
+    "name": "2022 Rock & Roll Hall Of Fame Induction Ceremony 2022",
+    "logo": "https://dai3fd1oh325y.cloudfront.net/images/480p/039469X0-portrait.jpg",
+    "type": "dash",
+    "manifestUri": "https://hbogoprod-vod.akamaized.net/video/vod/output/HBOAsia/63be360ad940521074c2ea5f_hbovodhd/dash0/IDN_DOLBY_index.mpd",
+    "clearKey": "16a7ddae7b5343b83832f9aaafd1a1e1:eaada52c2068c4c10130e1cf94c6810c",
+    "category": "🎬 HBOGO ASIA 2022"
+  },
+  {
+    "name": "Tad, The Lost Explorer And The Emerald Tablet 2022",
+    "logo": "https://dai3fd1oh325y.cloudfront.net/images/480p/040320X0-portrait.jpg",
+    "type": "dash",
+    "manifestUri": "https://hbogoprod-vod.akamaized.net/video/vod/output/HBOAsia/64cbb59ed940521074dc32ab_hbovodhd/dash0/IDN_DOLBY_index.mpd",
+    "clearKey": "dbf25444419515875f64b79da4b7b7a3:b24f9861bb7c2b0a291fd688ad50bbb1",
+    "category": "🎬 HBOGO ASIA 2022"
+  }
+    ];
+
+    let filteredChannels = staticChannels;
+    let shakaPlayer = null;
+
+    function groupChannels(channels) {
+      const grouped = {};
+      channels.forEach(ch => {
+        if (!grouped[ch.category]) grouped[ch.category] = [];
+        grouped[ch.category].push(ch);
+      });
+      return grouped;
+    }
+
+    function renderSections(grouped) {
+      const container = document.getElementById("channelSections");
+      container.innerHTML = "";
+
+      Object.entries(grouped).forEach(([category, channels]) => {
+        const section = document.createElement("div");
+        section.className = "section";
+
+        const title = document.createElement("h2");
+        title.textContent = category;
+        section.appendChild(title);
+
+        const scroll = document.createElement("div");
+        scroll.className = "horizontal-scroll";
+
+        channels.forEach(ch => {
+          const card = document.createElement("div");
+          card.className = "card-item";
+          card.setAttribute("tabindex", "0");
+          card.setAttribute("data-manifest", ch.manifestUri);
+          card.setAttribute("data-type", ch.type);
+          card.setAttribute("data-clearkey", JSON.stringify(ch.clearKey || {}));
+
+          const img = document.createElement("img");
+          img.src = ch.logo || "https://via.placeholder.com/150x225?text=No+Image";
+          img.alt = ch.name;
+          card.appendChild(img);
+
+          const titleP = document.createElement("p");
+          titleP.textContent = ch.name;
+          card.appendChild(titleP);
+
+          card.onclick = () => playChannel(ch);
+          scroll.appendChild(card);
+        });
+
+        section.appendChild(scroll);
+        container.appendChild(section);
+      });
+
+      setTimeout(() => {
+        const firstCard = document.querySelector(".card-item");
+        if (firstCard) firstCard.focus();
+      }, 300);
+    }
+
+    async function playChannel(channel) {
+      const container = document.getElementById("videoContainer");
+      const video = document.getElementById("videoPlayer");
+      container.style.display = "flex";
+
+      if (!shakaPlayer) {
+        if (!shaka.Player.isBrowserSupported()) {
+          alert("Shaka Player is not supported on this browser.");
+          return;
+        }
+        shakaPlayer = new shaka.Player(video);
+      }
+
+      try {
+        await shakaPlayer.unload();
+      } catch (e) {
+        console.warn("Unload error", e);
+      }
+
+      shakaPlayer.configure({
+        drm: {
+          clearKeys: channel.clearKey
+        }
+      });
+
+      try {
+        await shakaPlayer.load(channel.manifestUri);
+        await video.play();
+
+        // Auto fullscreen
+        if (video.requestFullscreen) {
+          video.requestFullscreen().catch(console.warn);
+        } else if (video.webkitRequestFullscreen) {
+          video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) {
+          video.msRequestFullscreen();
+        }
+
+      } catch (error) {
+        console.error("Shaka load error:", error);
+        alert("Failed to load video.");
+      }
+    }
+
+    function closeVideo() {
+      const container = document.getElementById("videoContainer");
+      const video = document.getElementById("videoPlayer");
+      video.pause();
+      container.style.display = "none";
+
+      // Exit fullscreen
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(console.warn);
+      }
+
+      // Refocus first card
+      const firstCard = document.querySelector(".card-item");
+      if (firstCard) firstCard.focus();
+    }
+
+    document.getElementById("searchBar").addEventListener("input", function () {
+      const query = this.value.toLowerCase();
+      filteredChannels = staticChannels.filter(ch => ch.name.toLowerCase().includes(query));
+      renderSections(groupChannels(filteredChannels));
+    });
+
+    document.addEventListener('keydown', (e) => {
+      const focused = document.activeElement;
+      const cards = Array.from(document.querySelectorAll('.card-item'));
+      if (!cards.length) return;
+      let index = cards.indexOf(focused);
+      switch (e.key) {
+        case 'ArrowRight':
+          if (index >= 0 && index < cards.length - 1) cards[index + 1].focus();
+          break;
+        case 'ArrowLeft':
+          if (index > 0) cards[index - 1].focus();
+          break;
+        case 'ArrowDown':
+          moveToSection(cards, index, 1);
+          break;
+        case 'ArrowUp':
+          moveToSection(cards, index, -1);
+          break;
+        case 'Enter':
+          if (focused && focused.dataset.manifest) {
+            const channel = {
+              manifestUri: focused.dataset.manifest,
+              type: focused.dataset.type,
+              clearKey: JSON.parse(focused.dataset.clearkey || "{}"),
+              name: focused.querySelector("p").textContent
+            };
+            playChannel(channel);
+          }
+          break;
+        case 'Backspace':
+        case 'Escape':
+          closeVideo();
+          break;
+      }
+    });
+
+    function moveToSection(cards, index, direction) {
+      const currentCard = cards[index];
+      if (!currentCard) return;
+      const currentSection = currentCard.closest('.section');
+      const allSections = Array.from(document.querySelectorAll('.section'));
+      const currentIndex = allSections.indexOf(currentSection);
+      const targetSection = allSections[currentIndex + direction];
+      if (targetSection) {
+        const targetCard = targetSection.querySelector('.card-item');
+        if (targetCard) targetCard.focus();
+      }
+    }
+
+    window.onload = () => {
+      renderSections(groupChannels(staticChannels));
+      const firstCard = document.querySelector(".card-item");
+      if (firstCard) firstCard.focus();
+      if (navigator.userAgent.includes("TV")) {
+        document.getElementById("searchBar").style.display = "none";
+      }
+    };
+  </script>
+</body>
+</html>
