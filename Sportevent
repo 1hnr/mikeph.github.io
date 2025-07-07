@@ -1,0 +1,11 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="SkySp.Action.uk" group-title="SPORTS" tvg-logo="https://raw.githubusercontent.com/pigzillaaaaa/iptv-scraper/refs/heads/main/logos/sky-sports-action-uk.png",pvv1
+#EXTVLCOPT:http-referrer=https://embedrun.store/
+#EXTVLCOPT:http-origin=https://embedrun.store
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (iPhone17,5; CPU iPhone OS 18_3_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 FireKeepers/1.7.0
+https://ses.welovestroll.store/tsn1/tracks-v1a1/mono.m3u8
+
+
+#EXTINF:-1 tvg-id="SkySp.Action.uk" group-title="SPORTS" tvg-logo="https://raw.githubusercontent.com/pigzillaaaaa/iptv-scraper/refs/heads/main/logos/sky-sports-action-uk.png",pvv2
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.7151.73 Mobile Safari/537.36
+https://a105.azplay12.me/hls/streama232939/index.m3u8?cst=d148972e6769884aedfff4a4b8a621ad
