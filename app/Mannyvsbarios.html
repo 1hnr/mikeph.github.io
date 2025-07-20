@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Shaka Player - MPD with Key</title>
+  <title>ppv</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.min.js"></script>
   <style>
     body {
@@ -12,7 +12,7 @@
     video {
       width: 100%;
       height: 100vh;
-      background-color: #000;
+      background: #000;
     }
   </style>
 </head>
@@ -22,70 +22,47 @@
   <script>
     const manifestUri = 'https://qp-pldt-live-grp-05-prod.akamaized.net/out/u/cg_ppv_main_hd.mpd';
 
-    // Replace this with your real Widevine license server URL
-    const licenseServerUrl = 'https://your-license-server.com';
+    // Replace this with the actual license server URL if known
+    const licenseServerUrl = 'https://your-license-server.com';  // REQUIRED
 
-    // License key as in #KODIPROP
+    // DRM license key from KODIPROP format
     const licenseKey = '549ab7cd35a64bb6bb479ecead04d69d:829799ed534d11fcadeb4b192467e050';
-
-    async function initApp() {
-      shaka.polyfill.installAll();
-
-      if (shaka.Player.isBrowserSupported()) {
-        await initPlayer();
-      } else {
-        console.error('Browser not supported!');
-      }
-    }
 
     async function initPlayer() {
       const video = document.getElementById('video');
-
-      // Try to unmute
       video.muted = false;
       video.volume = 1;
 
       const player = new shaka.Player(video);
-      player.addEventListener('error', onErrorEvent);
 
-      // Configure DRM if needed
       player.configure({
         drm: {
           servers: {
             'com.widevine.alpha': licenseServerUrl
           },
           updateRequestHeaders: {
-            'customdata': licenseKey // Change 'customdata' to actual header name if required
+            'customdata': licenseKey  // Change 'customdata' to the correct header name if needed
           }
         }
       });
 
       try {
         await player.load(manifestUri);
-        console.log('Video loaded successfully');
-        // Try to play
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-          playPromise.then(() => {
-            console.log('Playback started');
-          }).catch(error => {
-            console.warn('Autoplay failed:', error);
-          });
-        }
-      } catch (e) {
-        onError(e);
+        await video.play();
+        console.log('Playback started');
+      } catch (error) {
+        console.error('Playback failed:', error);
       }
     }
 
-    function onErrorEvent(event) {
-      onError(event.detail);
-    }
-
-    function onError(error) {
-      console.error('Error code', error.code, 'object', error);
-    }
-
-    document.addEventListener('DOMContentLoaded', initApp);
+    document.addEventListener('DOMContentLoaded', () => {
+      shaka.polyfill.installAll();
+      if (shaka.Player.isBrowserSupported()) {
+        initPlayer();
+      } else {
+        console.error('Shaka Player not supported in this browser.');
+      }
+    });
   </script>
 </body>
 </html>
