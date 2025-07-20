@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Shaka Player with DRM Key</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+    }
+    video {
+      width: 100%;
+      height: 100vh;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+  <video id="video" autoplay muted controls></video>
+
+  <script>
+    const manifestUri = 'https://qp-pldt-live-grp-05-prod.akamaized.net/out/u/cg_ppv_main_hd.mpd';
+
+    // Replace with the correct license server URL for your DRM provider
+    const licenseServerUrl = 'https://your-license-server.com';
+
+    // License key as used in your KODIPROP
+    const licenseKey = '549ab7cd35a64bb6bb479ecead04d69d:829799ed534d11fcadeb4b192467e050';
+
+    async function initApp() {
+      shaka.polyfill.installAll();
+
+      if (shaka.Player.isBrowserSupported()) {
+        initPlayer();
+      } else {
+        console.error('Browser not supported!');
+      }
+    }
+
+    async function initPlayer() {
+      const video = document.getElementById('video');
+      const player = new shaka.Player(video);
+
+      player.addEventListener('error', onErrorEvent);
+
+      // Configure DRM settings
+      player.configure({
+        drm: {
+          servers: {
+            'com.widevine.alpha': licenseServerUrl
+          },
+          updateRequestHeaders: {
+            'x-license-key': licenseKey  // You can change 'x-license-key' to the actual header name if needed
+          }
+        }
+      });
+
+      try {
+        await player.load(manifestUri);
+        console.log('The video has been loaded!');
+      } catch (e) {
+        onError(e);
+      }
+    }
+
+    function onErrorEvent(event) {
+      onError(event.detail);
+    }
+
+    function onError(error) {
+      console.error('Error code', error.code, 'object', error);
+    }
+
+    document.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
