@@ -89,8 +89,8 @@
 
     <div class="app-box">
       <h2>M3U</h2>
-      <img src="https://i.imgur.com/C6CD0gF.jpeg" alt="HONOR TV">
-      <a href="https://www.mediafire.com/file/gswked3gkupe584/HONOR+TV+(VIP)_1.2.apk/file" target="_blank">VIEW</a>        
+      <img src="https://cdn-icons-png.flaticon.com/512/9645/9645786.png" alt="HONOR TV">
+      <a href="https://honortv.vercel.app/app/viewm.html" target="_blank">VIEW</a>        
     </div>
 
 </body>
