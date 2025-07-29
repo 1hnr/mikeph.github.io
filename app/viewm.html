@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>M3U Playlist Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #121212;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: #1f1f1f;
+      padding: 1rem;
+      text-align: center;
+      color: #00ffff;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    #content {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-family: monospace;
+    }
+    #copyBtn {
+      background-color: #00c853;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 1rem;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    #copyBtn:hover {
+      background-color: #00b342;
+    }
+    .extinf {
+      color: #ffc107;
+    }
+    .url {
+      color: #4fc3f7;
+    }
+  </style>
+</head>
+<body>
+  <header>M3U Playlist Viewer</header>
+  <button id="copyBtn">📋 Copy All</button>
+  <div id="content">Loading...</div>
+
+  <script>
+    const contentDiv = document.getElementById('content');
+    const copyBtn = document.getElementById('copyBtn');
+
+    async function fetchPlaylist() {
+      try {
+        const response = await fetch('https://m3u.work/LINWLvt.m3u');
+        const text = await response.text();
+        const lines = text.split('\n').map(line => {
+          if (line.startsWith('#EXTINF')) {
+            return `<span class="extinf">${line}</span>`;
+          } else if (line.startsWith('http')) {
+            return `<span class="url">${line}</span>`;
+          } else {
+            return `<span>${line}</span>`;
+          }
+        }).join('\n');
+        contentDiv.innerHTML = lines;
+      } catch (err) {
+        contentDiv.innerHTML = `<span style="color: red;">Failed to load playlist.</span>`;
+        console.error(err);
+      }
+    }
+
+    copyBtn.addEventListener('click', () => {
+      const tempText = contentDiv.innerText;
+      navigator.clipboard.writeText(tempText).then(() => {
+        copyBtn.textContent = '✅ Copied!';
+        setTimeout(() => {
+          copyBtn.textContent = '📋 Copy All';
+        }, 1500);
+      });
+    });
+
+    fetchPlaylist();
+  </script>
+</body>
+</html>
