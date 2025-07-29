@@ -1,85 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>View M3U</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8">
+  <title>M3U Link Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <style>
     body {
       background-color: #121212;
-      color: #e0e0e0;
-      font-family: monospace;
-      margin: 0;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
       height: 100vh;
-    }
-    header {
-      background: #1e1e1e;
+      margin: 0;
       padding: 1rem;
-      font-size: 1.5rem;
       text-align: center;
-      color: #00e676;
     }
-    #copyBtn {
-      background: #00c853;
+
+    .url-box {
+      background-color: #1e1e1e;
+      color: #00e5ff;
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      word-break: break-all;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background-color: #00c853;
       color: white;
       border: none;
-      padding: 0.75rem 1.2rem;
-      margin: 1rem auto;
+      padding: 0.8rem 1.2rem;
+      border-radius: 6px;
       font-size: 1rem;
-      border-radius: 8px;
       cursor: pointer;
     }
-    #content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem;
-      white-space: pre-wrap;
+
+    button:hover {
+      background-color: #00a844;
     }
-    .extinf { color: #ffd600; }
-    .url { color: #4fc3f7; }
   </style>
 </head>
 <body>
-  <header>M3U Viewer</header>
-  <button id="copyBtn">📋 Copy</button>
-  <div id="content">Loading playlist...</div>
+
+  <div class="url-box" id="m3uLink">https://m3u.work/LINWLvt.m3u</div>
+  <button onclick="copyLink()">📋 Copy M3U Link</button>
 
   <script>
-    const m3uUrl = "https://m3u.work/LINWLvt.m3u";
-    const proxyUrl = "https://corsproxy.io/?";
-    const contentDiv = document.getElementById("content");
-    const copyBtn = document.getElementById("copyBtn");
-
-    async function fetchM3U() {
-      try {
-        const res = await fetch(proxyUrl + encodeURIComponent(m3uUrl));
-        const text = await res.text();
-        const lines = text.split("\n").map(line => {
-          if (line.startsWith("#EXTINF")) {
-            return `<span class="extinf">${line}</span>`;
-          } else if (line.startsWith("http")) {
-            return `<span class="url">${line}</span>`;
-          } else {
-            return line;
-          }
-        }).join("\n");
-        contentDiv.innerHTML = lines;
-      } catch (err) {
-        contentDiv.innerHTML = "<span style='color:red;'>Failed to load M3U file.</span>";
-      }
-    }
-
-    copyBtn.addEventListener("click", () => {
-      const text = contentDiv.innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        copyBtn.innerText = "✅ Copied!";
-        setTimeout(() => copyBtn.innerText = "📋 Copy", 1500);
+    function copyLink() {
+      const link = document.getElementById('m3uLink').textContent;
+      navigator.clipboard.writeText(link).then(() => {
+        const btn = document.querySelector('button');
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy M3U Link', 1500);
       });
-    });
-
-    fetchM3U();
+    }
   </script>
+
 </body>
 </html>
